@@ -24,11 +24,12 @@ public class UserAccount {
     public UserAccount() {
     }
 
+    public int getUserID() {
+        return userID;
+    }
 
-    public UserAccount(String userLogin, String password, String accessLevel) {
-        this.userLogin = userLogin;
-        this.password = password;
-        this.accessLevel = accessLevel;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public UserAccount(int userID, String userLogin, String password, String userName, String email ) {

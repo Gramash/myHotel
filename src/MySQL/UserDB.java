@@ -20,6 +20,7 @@ public class UserDB {
             ResultSet rs = prstm.executeQuery();
             if (rs.next()) {
                 UserAccount user = new UserAccount();
+                user.setUserID(Integer.parseInt(rs.getString("user_id")));
                 user.setUserLogin(rs.getString("login"));
                 user.setPassword(rs.getString("password"));
                 user.setUserName(rs.getString("name"));

@@ -3,6 +3,7 @@ package Servlets;
 import JavaBeans.UserAccount;
 import MySQL.UserDB;
 import Utils.AppUtils;
+import config.SecurityConfig;
 
 import java.io.IOException;
 
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,6 +50,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         AppUtils.storeLoginedUser(request.getSession(), userAccount);
+        request.getSession().setAttribute("role", SecurityConfig.ROLE_MANAGER);
 
 
         // redirect to userInfo after succesessful login

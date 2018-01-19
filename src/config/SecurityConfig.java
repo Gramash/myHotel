@@ -19,6 +19,10 @@ public class SecurityConfig {
         init();
     }
 
+    public static String getRoleManager() {
+        return ROLE_MANAGER;
+    }
+
     private static void init() {
 
         // Congig for CUSTOMER role
@@ -38,6 +42,8 @@ public class SecurityConfig {
 
         mapConfig.put(ROLE_MANAGER, urlPatternsManager);
     }
+
+
 
     public static Set<String> getAllRoles() {
         return mapConfig.keySet();

@@ -7,25 +7,31 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>ProductView</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery UI Datepicker - Default functionality</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style>
         table {
-            border-spacing: 0;
-            width: 50%;
-            border: 1px solid #ddd;
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 40%;
         }
-        th {
-            cursor: pointer;
-        }
-        th, td {
+
+        td, th {
+            border: 1px solid #dddddd;
             text-align: left;
-            padding: 16px;
+            padding: 8px;
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2
+            background-color: #dddddd;
         }
     </style>
 </head>
@@ -34,23 +40,52 @@
 
 <h3>Available rooms</h3>
 
-<table id="productsTable">
-<tr>
-    <th>Room #</th>
-    <th>Sleeps</th>
-    <th>Price</th>
-    <th>image</th>
-</tr>
-<c:forEach items="${productList}" var="product">
+<p style="color: blue;" >${confirmMessage}</p>
+
+<table>
     <tr>
-        <td>${product.roomNo}</td>
-        <td>${product.sleeps}</td>
-        <td>${product.price}</td>
-        <td>
-            <img src="${product.image}" height="125" width="150">
-        </td>
+        <th>Room #</th>
+        <th>Sleeps</th>
+        <th>Price</th>
+        <th>image</th>
+        <th>Check-In</th>
+        <th>Check-Out</th>
+        <th>make order</th>
     </tr>
-</c:forEach>
+    <c:forEach items="${productList}" var="product" varStatus="loop">
+        <form method="post" action="${pageContext.request.contextPath}/productView">
+
+            <tr>
+                <td> <input name="id" type="hidden" value="${product.roomNo}"> ${product.roomNo}</td>
+                <td>${product.sleeps}</td>
+                <td>${product.price}</td>
+                <td>
+                    <img src="${product.image}" height="125" width="150">
+                </td>
+                <td align="center">
+                    <script>
+                        $(function () {
+                            $(this).datepicker();
+                            $(".datepicker").each(function (index) {
+                            })
+                        });
+                    </script>
+                    <input style="width:100px;" type="text" class="datepicker" name="checkIn">
+                </td>
+                <td align="center">
+                    <script>
+                        $(function () {
+                            $(".datepicker").each(function (index) {
+                                $(this).datepicker();
+                            })
+                        });
+                    </script>
+                    <input style="width:100px;" type="text" class="datepicker" name="checkOut">
+                </td>
+                <td><input type="submit" value="Submit"/></td>
+            </tr>
+        </form>
+    </c:forEach>
 </table>
 </body>
 </html>

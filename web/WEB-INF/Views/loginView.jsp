@@ -23,7 +23,6 @@
 <p style="color: blue;" >${welcomeMessage}</p>
 
 <form method="POST" action="${pageContext.request.contextPath}/login">
-    <input type="hidden" name="redirectId" value="${param.redirectId}" />
     <table border="0">
         <tr>
             <td>User Login</td>

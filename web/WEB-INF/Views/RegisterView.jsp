@@ -21,23 +21,22 @@
 <p style="color: red;">${errorMessage}</p>
 
 <form method="POST" action="${pageContext.request.contextPath}/register">
-    <input type="hidden" name="redirectId" value="${param.redirectId}" />
     <table border="0">
         <tr>
             <td>User Login</td>
-            <td><input type="text" name="userLogin" value= "${user.userLogin}" /> </td>
+            <td><input type="text" name="userLogin" /> </td>
         </tr>
         <tr>
             <td>Password</td>
-            <td><input type="password" name="password" value= "${user.password}" /> </td>
+            <td><input type="password" name="password"/> </td>
         </tr>
         <tr>
             <td>User Name</td>
-            <td><input type="text" name="userName" value= "${user.userName}" /> </td>
+            <td><input type="text" name="userName" /> </td>
         </tr>
         <tr>
             <td>Email</td>
-            <td><input type="text" name="email" value= "${user.email}" /> </td>
+            <td><input type="text" name="email" /> </td>
         </tr>
         <tr>
             <td colspan ="2">

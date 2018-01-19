@@ -1,6 +1,4 @@
-package Servlets;
-
-import config.SecurityConfig;
+package Practice10;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,18 +7,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/managerTask")
-public class ManagerTaskServlet extends HttpServlet {
+@WebServlet("/remove")
+public class RemoveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/managerTaskView.jsp");
-        rq.forward(req, resp);
-    }
 
+
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+        List list = Utils.getUserList(req.getSession());
+        list = null;
+        RequestDispatcher dispatcher //
+                = req.getRequestDispatcher("/Part3/Part3.jsp");
+
+        dispatcher.forward(req, resp);
     }
 }

@@ -6,13 +6,18 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<a href="${pageContext.request.contextPath}/customerTask">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<a href="${pageContext.request.contextPath}/personalCabinet">
     Customer Task
 </a>
+
+<c:if test="${loginedUser!=null && loginedUser.accessLevel.equals(role)}">
 ||
-<a href="${pageContext.request.contextPath}/managerTask">
-    Manager Task
-</a>
+    <a href="${pageContext.request.contextPath}/managerTask">
+        Manager Task
+    </a>
+</c:if>
 ||
 <a href="${pageContext.request.contextPath}/productView">
     Product View
