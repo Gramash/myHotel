@@ -1,6 +1,8 @@
 package Servlets;
 
-import MySQL.OrdersDB;
+import JavaBeans.Application;
+import MySQL.ApplicationsTable;
+import MySQL.OrdersTable;
 import Utils.AppUtils;
 
 import javax.servlet.RequestDispatcher;
@@ -17,14 +19,20 @@ public class PersonalCabinet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try{
+        try {
             System.out.println("PersonalCabinet#doGet");
-            List orderList = OrdersDB.getOrderByUserId(AppUtils.getLoginedUser(req.getSession()).getUserID());
+            List orderList = OrdersTable.getOrderByUserId(AppUtils.getLoginedUser(req.getSession()).getUserID());
+            List applList = ApplicationsTable.extractForUser(AppUtils.getLoginedUser(req.getSession()).getUserID());
+            if (orderList.size() == 0) {
+                req.setAttribute("message", "You have no pending orders yet" + "\n Proceed products to make an order");
+            }
+            if(applList.size()==0){
+                req.setAttribute("applMessage", "You have no applications yet");
+            }
             req.setAttribute("orderList", orderList);
-        } catch (NullPointerException e){
-            req.setAttribute("message", "You have no pending orders yet" + "\n Proceed products to make an order");
-            RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
-            rq.forward(req, resp);
+            req.setAttribute("applList", applList);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
         RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
         rq.forward(req, resp);

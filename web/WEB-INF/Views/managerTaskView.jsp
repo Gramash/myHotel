@@ -28,6 +28,10 @@
         tr:nth-child(even) {
             background-color: #dddddd;
         }
+        p {
+            text-indent: 50px;
+            margin-left: 100px;
+        }
     </style>
 </head>
 
@@ -35,11 +39,11 @@
 
 <jsp:include page="../../_menu.jsp"></jsp:include>
 
-<h3>Manager Task</h3>
+<h3 style="margin-left: 2%">Manager Task</h3>
 
-Hello, This is a protected page!
+<p style="margin-left: 2%"> Hello, This is a protected page!</p>
 
-<table>
+<table style="margin-left: 2%">
     <tr>
         <td>Room #</td>
         <td>Sleeps</td>
@@ -61,6 +65,29 @@ Hello, This is a protected page!
             <td>${order.user.userName}</td>
             <td>${order.user.email}</td>
             <td>${order.paid}</td>
+        </tr>
+    </c:forEach>
+</table>
+<br> <hr>
+<p style="margin-left: 2%">Pending Applications</p>
+<table style="margin-left: 2%">
+    <tr>
+        <td>Application#</td>
+        <td>sleeps</td>
+        <td>Check In</td>
+        <td>Check Out</td>
+        <td>email</td>
+        <td>name</td>
+    </tr>
+
+    <c:forEach items="${applList}" var="appl">
+        <tr>
+            <td>${appl.applId}</td>
+            <td>${appl.sleeps}</td>
+            <td>${appl.checkIn}</td>
+            <td>${appl.checkOut}</td>
+            <td>${appl.email}</td>
+            <td>${appl.name}</td>
         </tr>
     </c:forEach>
 </table>

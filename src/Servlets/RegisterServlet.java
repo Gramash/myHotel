@@ -1,10 +1,6 @@
 package Servlets;
 
 
-import JavaBeans.UserAccount;
-import MySQL.UserDB;
-import Utils.AppUtils;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,8 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static MySQL.UserDB.findByLogin;
-import static MySQL.UserDB.insertUser;
+import static MySQL.UserTable.insertUser;
 
 @WebServlet("/register")
 public class RegisterServlet extends HomeServlet {

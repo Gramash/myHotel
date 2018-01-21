@@ -1,8 +1,9 @@
 package Servlets;
 
+import JavaBeans.Application;
 import JavaBeans.Order;
-import MySQL.OrdersDB;
-import config.SecurityConfig;
+import MySQL.ApplicationsTable;
+import MySQL.OrdersTable;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/managerTask")
@@ -20,10 +20,9 @@ public class ManagerTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Order> orderList;
-        orderList = OrdersDB.getOrderManager();
-        for(Order order : orderList){
-            System.out.println(order);
-        }
+        orderList = OrdersTable.getOrderManager();
+        List applList = ApplicationsTable.extractAll();
+        req.setAttribute("applList", applList);
         req.setAttribute("orderList", orderList);
         RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/managerTaskView.jsp");
         rq.forward(req, resp);

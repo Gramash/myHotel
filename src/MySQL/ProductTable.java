@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDB {
+public class ProductTable {
 
 
     private static final String FIND_ALL_PRODUCTS = "select * from products order by roomNo";

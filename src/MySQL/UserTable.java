@@ -5,8 +5,9 @@ import JavaBeans.UserAccount;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class UserDB {
+public class UserTable {
 
     private static final String FIND_BY_LOGIN_AND_PASS = "select * from users WHERE login = ? and password =?";
     private static final String FIND_BY_LOGIN = "select * from users WHERE email = ? ";
@@ -19,37 +20,36 @@ public class UserDB {
             prstm.setString(k++, login);
             prstm.setString(k, password);
             ResultSet rs = prstm.executeQuery();
-            if (rs.next()) {
-                UserAccount user = new UserAccount();
-                user.setUserID(Integer.parseInt(rs.getString("user_id")));
-                user.setUserLogin(rs.getString("login"));
-                user.setPassword(rs.getString("password"));
-                user.setUserName(rs.getString("name"));
-                user.setAccessLevel(rs.getString("role"));
-                user.setEmail(rs.getString("email"));
-                return user;
-            }
+            UserAccount user = getUserAccount(rs);
+            if (user != null) return user;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    private static UserAccount getUserAccount(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            UserAccount user = new UserAccount();
+            user.setUserID(Integer.parseInt(rs.getString("user_id")));
+            user.setUserLogin(rs.getString("login"));
+            user.setPassword(rs.getString("password"));
+            user.setUserName(rs.getString("name"));
+            user.setAccessLevel(rs.getString("role"));
+            user.setEmail(rs.getString("email"));
+            return user;
+        }
+        return null;
+    }
+
     public static UserAccount findByEmail(String login) {
         try (Connection conn = ConnectionUtils.getConnection()) {
             PreparedStatement prstm = conn.prepareStatement(FIND_BY_LOGIN);
             int k = 1;
             prstm.setString(k++, login);
             ResultSet rs = prstm.executeQuery();
-            if (rs.next()) {
-                UserAccount user = new UserAccount();
-                user.setUserID(Integer.parseInt(rs.getString("user_id")));
-                user.setUserLogin(rs.getString("login"));
-                user.setPassword(rs.getString("password"));
-                user.setUserName(rs.getString("name"));
-                user.setAccessLevel(rs.getString("role"));
-                user.setEmail(rs.getString("email"));
-                return user;
-            }
+            UserAccount user = getUserAccount(rs);
+            if (user != null) return user;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -40,6 +40,7 @@
 This is a protected page <br>
 
 <p style="color: black;">${message}</p>
+<p style="color: #2aabd2">${noOrders}</p>
 
 <table border="1">
     <tr>
@@ -59,5 +60,30 @@ This is a protected page <br>
         </tr>
     </c:forEach>
 </table>
+<br><hr>
+<p> Your Applications</p>
+<p>${applMessage}</p>
+<table style="margin-left: 2%">
+    <tr>
+        <td>Application#</td>
+        <td>sleeps</td>
+        <td>Check In</td>
+        <td>Check Out</td>
+        <td>email</td>
+        <td>name</td>
+    </tr>
+
+    <c:forEach items="${applList}" var="appl">
+        <tr>
+            <td>${appl.applId}</td>
+            <td>${appl.sleeps}</td>
+            <td>${appl.checkIn}</td>
+            <td>${appl.checkOut}</td>
+            <td>${appl.email}</td>
+            <td>${appl.name}</td>
+        </tr>
+    </c:forEach>
+</table>
+
 </body>
 </html>

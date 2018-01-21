@@ -2,10 +2,9 @@ package Servlets;
 
 import JavaBeans.Product;
 import JavaBeans.UserAccount;
-import MySQL.OrdersDB;
-import MySQL.ProductDB;
+import MySQL.OrdersTable;
+import MySQL.ProductTable;
 import Utils.AppUtils;
-import Utils.UserUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,7 +22,7 @@ public class ProductViewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> productList;
-        productList = ProductDB.extractAll();
+        productList = ProductTable.extractAll();
         request.setAttribute("productList", productList);
 
         RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/ProductView.jsp");
@@ -50,10 +49,11 @@ public class ProductViewServlet extends HttpServlet {
         String checkIn = req.getParameter("checkIn");
         String checkOut = req.getParameter("checkOut");
 
-        if (OrdersDB.insertOrder(userId, productId, checkIn, checkOut)) {
+        if (OrdersTable.insertOrder(userId, productId, checkIn, checkOut)) {
             req.setAttribute("confirmMessage", "You have successfully made an order.");
             doGet(req, resp);
         }
+
 
     }
 }

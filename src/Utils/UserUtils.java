@@ -1,8 +1,6 @@
 package Utils;
 
 import JavaBeans.UserAccount;
-import MySQL.UserDB;
-import Practice10.User;
 import config.SecurityConfig;
 
 import java.text.ParseException;

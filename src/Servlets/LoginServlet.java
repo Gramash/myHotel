@@ -1,7 +1,7 @@
 package Servlets;
 
 import JavaBeans.UserAccount;
-import MySQL.UserDB;
+import MySQL.UserTable;
 import Utils.AppUtils;
 import config.SecurityConfig;
 
@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
         String userLogin = request.getParameter("userLogin");
         String password = request.getParameter("password");
 
-        UserAccount userAccount = UserDB.findByLogin(userLogin, password);
+        UserAccount userAccount = UserTable.findByLogin(userLogin, password);
 
         if (userAccount == null) {
             String errorMessage = "Invalid Login or Password";
