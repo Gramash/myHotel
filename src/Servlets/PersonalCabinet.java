@@ -17,10 +17,18 @@ public class PersonalCabinet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List orderList = OrdersDB.getOrderByUserId(AppUtils.getLoginedUser(req.getSession()).getUserID());
-        req.setAttribute("orderList", orderList);
+        try{
+            System.out.println("PersonalCabinet#doGet");
+            List orderList = OrdersDB.getOrderByUserId(AppUtils.getLoginedUser(req.getSession()).getUserID());
+            req.setAttribute("orderList", orderList);
+        } catch (NullPointerException e){
+            req.setAttribute("message", "You have no pending orders yet" + "\n Proceed products to make an order");
+            RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
+            rq.forward(req, resp);
+        }
         RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
         rq.forward(req, resp);
+
     }
 
     @Override

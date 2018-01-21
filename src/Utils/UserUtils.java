@@ -11,11 +11,6 @@ import java.util.Date;
 
 public class UserUtils {
 
-    public static void main(String[] args) {
-        UserAccount user = UserDB.findByLogin("reygo","gibsonlp");
-        System.out.println(hasPermission(user));
-    }
-
     public boolean emailIsValid (){
         return false;
     }

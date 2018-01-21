@@ -46,14 +46,14 @@ public class ProductViewServlet extends HttpServlet {
         System.out.println(userId);
         int productId = Integer.parseInt(req.getParameter("id"));
         System.out.println(productId);
-        String checkIn = UserUtils.formatDate(req.getParameter("checkIn"), "mm/dd/yyyy", "yyyy/mm/dd");
-        String checkOut = UserUtils.formatDate(req.getParameter("checkOut"), "mm/dd/yyyy", "yyyy/mm/dd");
+        System.out.println(req.getParameter("checkIn"));
+        String checkIn = req.getParameter("checkIn");
+        String checkOut = req.getParameter("checkOut");
 
         if (OrdersDB.insertOrder(userId, productId, checkIn, checkOut)) {
-
-
+            req.setAttribute("confirmMessage", "You have successfully made an order.");
+            doGet(req, resp);
         }
-        req.setAttribute("confirmMessage", "LOL");
-        doGet(req, resp);
+
     }
 }

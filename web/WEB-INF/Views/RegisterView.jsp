@@ -10,42 +10,175 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title>Register</title>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+        body {
+            background: -webkit-linear-gradient(left, #25c481, #25b7c4);
+            background: linear-gradient(to right, #25c481, #25b7c4);
+            font-family: 'Roboto', sans-serif;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #message {
+            display: none;
+            background: #f1f1f1;
+            color: #000;
+            position: relative;
+            padding: 10px;
+
+        }
+
+        #message p {
+            padding: 10px 20px;
+            font-size: 90%
+        }
+
+        .valid {
+            color: green;
+        }
+
+        .valid:before {
+            position: relative;
+            left: -35px;
+            content: "✔";
+        }
+
+        .invalid {
+            color: red;
+        }
+
+        .invalid:before {
+            position: relative;
+            left: -35px;
+            content: "✖";
+        }
+    </style>
 </head>
 <body>
 
-<jsp:include page="../../_menu.jsp"></jsp:include>
+<jsp:include page="../../_menu.jsp"/>
 
-<h3>Login Page</h3>
+<p align="center" style="color: red;">${errorMessage}</p>
+<div class="container">
+    <form method="POST" action="${pageContext.request.contextPath}/register">
+        <table align="center">
+            <tr>
+                <td>
+                    <label for="id"></label>
+                    <input type="text" id="id" placeholder="Login" name="userLogin" required/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="psw"></label>
+                    <input type="password" id="psw" name="password" placeholder="Password"
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name"></label>
+                    <input type="text" id="name" placeholder="First Name" name="userName" required/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="emailID"></label>
+                    <input type="email" id="emailID" placeholder="E-mail" name="email" required/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Submit"/>
+                    <a style="color:white" href="${pageContext.request.contextPath}/">Cancel</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 
-<p style="color: red;">${errorMessage}</p>
+<div id="message" align="center">
+    <h4>Password must contain the following:</h4>
+    <p  id="letter" class="invalid">A <b>lowercase</b> letter</p>
+    <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+    <p id="number" class="invalid">A <b>number</b></p>
+    <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+</div>
 
-<form method="POST" action="${pageContext.request.contextPath}/register">
-    <table border="0">
-        <tr>
-            <td>User Login</td>
-            <td><input type="text" name="userLogin" /> </td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="password" name="password"/> </td>
-        </tr>
-        <tr>
-            <td>User Name</td>
-            <td><input type="text" name="userName" /> </td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><input type="text" name="email" /> </td>
-        </tr>
-        <tr>
-            <td colspan ="2">
-                <input type="submit" value= "Submit" />
-                <a href="${pageContext.request.contextPath}/">Cancel</a>
-            </td>
-        </tr>
-    </table>
-</form>
+<script>
+    var myInput = document.getElementById("psw");
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
+
+    // When the user clicks on the password field, show the message box
+    myInput.onfocus = function () {
+        document.getElementById("message").style.display = "block";
+    }
+
+    // When the user clicks outside of the password field, hide the message box
+    myInput.onblur = function () {
+        document.getElementById("message").style.display = "none";
+    }
+
+    // When the user starts to type something inside the password field
+    myInput.onkeyup = function () {
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        if (myInput.value.match(lowerCaseLetters)) {
+            letter.classList.remove("invalid");
+            letter.classList.add("valid");
+        } else {
+            letter.classList.remove("valid");
+            letter.classList.add("invalid");
+        }
+
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        if (myInput.value.match(upperCaseLetters)) {
+            capital.classList.remove("invalid");
+            capital.classList.add("valid");
+        } else {
+            capital.classList.remove("valid");
+            capital.classList.add("invalid");
+        }
+
+        // Validate numbers
+        var numbers = /[0-9]/g;
+        if (myInput.value.match(numbers)) {
+            number.classList.remove("invalid");
+            number.classList.add("valid");
+        } else {
+            number.classList.remove("valid");
+            number.classList.add("invalid");
+        }
+
+        // Validate length
+        if (myInput.value.length >= 8) {
+            length.classList.remove("invalid");
+            length.classList.add("valid");
+        } else {
+            length.classList.remove("valid");
+            length.classList.add("invalid");
+        }
+    }
+</script>
 
 
 </body>

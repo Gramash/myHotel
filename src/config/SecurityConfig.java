@@ -29,7 +29,7 @@ public class SecurityConfig {
         List<String> urlPatternsCustomer = new ArrayList<String>();
 
         urlPatternsCustomer.add("/userInfo");
-        urlPatternsCustomer.add("/customerTask");
+        urlPatternsCustomer.add("/personalCabinet");
 
         mapConfig.put(ROLE_CUSTOMER, urlPatternsCustomer);
 
@@ -38,7 +38,7 @@ public class SecurityConfig {
 
         urlPatternsManager.add("/userInfo");
         urlPatternsManager.add("/managerTask");
-        urlPatternsManager.add("/customerTask");
+        urlPatternsManager.add("/personalCabinet");
 
         mapConfig.put(ROLE_MANAGER, urlPatternsManager);
     }

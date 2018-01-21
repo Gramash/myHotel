@@ -37,7 +37,9 @@
 
 <h3>Hello: ${loginedUser.userName} </h3>
 
-Hello, This is a protected page <br>
+This is a protected page <br>
+
+<p style="color: black;">${message}</p>
 
 <table border="1">
     <tr>

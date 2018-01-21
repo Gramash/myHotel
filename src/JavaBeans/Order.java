@@ -4,14 +4,15 @@ package JavaBeans;
 import java.sql.Date;
 
 public class Order {
-    int roomNo;
-    Date checkIn;
-    Date checkOut;
-    int sleeps;
-    double price;
+    private int roomNo;
+    private Date checkIn;
+    private Date checkOut;
+    private int sleeps;
+    private double price;
+    private boolean paid;
+    private UserAccount user;
 
-
-    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price){
+    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price) {
         this.roomNo = roomNo;
         this.sleeps = sleeps;
         this.checkIn = checkIn;
@@ -19,7 +20,37 @@ public class Order {
         this.price = price;
     }
 
-    public Order(){}
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public UserAccount getUser() {
+        return user;
+    }
+
+    public void setUser(UserAccount user) {
+        this.user = user;
+    }
+
+    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, boolean paid, UserAccount user) {
+        this.roomNo = roomNo;
+        this.sleeps = sleeps;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+
+        this.price = price;
+        this.paid = paid;
+        this.user = user;
+
+    }
+
+
+    public Order() {
+    }
 
     public int getRoomNo() {
         return roomNo;
@@ -61,5 +92,16 @@ public class Order {
         this.checkOut = checkOut;
     }
 
-
+    @Override
+    public String toString() {
+        return "Order{" +
+                "roomNo=" + roomNo +
+                ", checkIn=" + checkIn +
+                ", checkOut=" + checkOut +
+                ", sleeps=" + sleeps +
+                ", price=" + price +
+                ", paid=" + paid +
+                ", user=" + user +
+                '}';
+    }
 }
