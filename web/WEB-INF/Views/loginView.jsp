@@ -11,13 +11,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+
         body {
             background: -webkit-linear-gradient(left, #25c481, #25b7c4);
             background: linear-gradient(to right, #25c481, #25b7c4);
             font-family: 'Roboto', sans-serif;
         }
+
         input {
             width: 100%;
             padding: 12px;
@@ -32,6 +35,7 @@
             background-color: #4CAF50;
             color: white;
         }
+
     </style>
 </head>
 <body>
@@ -40,42 +44,42 @@
 
 
 <p style="color: red;">${errorMessage}</p>
-<p style="color: blue;" >${welcomeMessage}</p>
+<p style="color: blue;">${welcomeMessage}</p>
+<div class="container">
+    <form method="POST" action="${pageContext.request.contextPath}/login">
+        <table border="0" align="center">
+            <tr>
+                <td>
+                    <label></label>
+                    <input type="text" placeholder="Login" name="userLogin" value="${user.userLogin}"
+                           class="form-control" required=''/></td>
+            </tr>
+            <tr>
+                <td>
+                    <label></label>
+                    <input type="password" placeholder="password" name="password" value="${user.password}"
+                           class="form-control"/></td>
+            </tr>
+            <tr>
+                <td>
+                    <label></label>
+                    <input type="submit" value="Submit"/>
+                    <a style="color: mintcream" href="${pageContext.request.contextPath}/">Cancel</a>
+                </td>
+            </tr>
+        </table>
 
-<form method="POST" action="${pageContext.request.contextPath}/login" >
-    <table border="0" align="center">
-        <tr>
-            <td>
-                <label></label>
-                <input type="text" placeholder="Login" name="userLogin" value= "${user.userLogin}"
-                       class="form-control" required=''/></td>
-        </tr>
-        <tr>
-            <td>
-                <label></label>
-                <input type="password" placeholder="password" name="password" value= "${user.password}"
-                       class="form-control"/> </td>
-        </tr>
-        <tr>
-            <td>
-                <label></label>
-                <input type="submit" value= "Submit" />
-                <a href="${pageContext.request.contextPath}/">Cancel</a>
-            </td>
-        </tr>
-    </table>
-
-    <script>
-        $(document).ready(function() {
-            $('#userLogin').click(function() {
-                if (!$.trim($('#userLogin').val())) {
-                    alert("textbox value can't be empty");
-                }
+        <script>
+            $(document).ready(function () {
+                $('#userLogin').click(function () {
+                    if (!$.trim($('#userLogin').val())) {
+                        alert("textbox value can't be empty");
+                    }
+                });
             });
-        });
-    </script>
-</form>
-
+        </script>
+    </form>
+</div>
 
 </body>
 </html>

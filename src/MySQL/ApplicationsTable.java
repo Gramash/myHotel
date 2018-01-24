@@ -13,13 +13,14 @@ import java.util.ResourceBundle;
 
 public class ApplicationsTable {
 
+
     private static final String INSERT_APPLICATION = "insert into applications values (?,?,?,?,?)";
-    private static final String EXTRACT_ALL = "select application_id, sleeps, checkIn, checkOut, users.email, users.name " +
+    private static final String EXTRACT_ALL = "select applications.user_id, application_id, sleeps, checkIn, checkOut, users.email, users.name " +
             "from applications " +
             "inner join users ON users.user_id = applications.user_id";
-    private static final String EXTRACT_FOR_USER = "select application_id, sleeps, checkIn, checkOut, users.email, users.name\n"+
-            "from applications\n"+
-            "inner join users ON users.user_id = applications.user_id \n"+
+    private static final String EXTRACT_FOR_USER = "select application_id, sleeps, checkIn, checkOut, users.email, users.name\n" +
+            "from applications\n" +
+            "inner join users ON users.user_id = applications.user_id \n" +
             "where applications.user_id = ?";
 
     private static int createApplId() {
@@ -54,7 +55,7 @@ public class ApplicationsTable {
             while (rs.next()) {
                 Application app = new Application(rs.getString("application_id"),
                         rs.getInt("sleeps"), rs.getString("checkIn"), rs.getString("checkOut"),
-                        rs.getString("email"), rs.getString("name"));
+                        rs.getString("email"), rs.getString("name"), rs.getInt("user_id"));
                 list.add(app);
             }
         } catch (SQLException e) {
@@ -63,21 +64,21 @@ public class ApplicationsTable {
         return list;
     }
 
-    public static List<Application> extractForUser (int userId){
+    public static List<Application> extractForUser(int userId) {
         List<Application> list = null;
         ResultSet rs;
         try (Connection conn = ConnectionUtils.getConnection()) {
             PreparedStatement prstm = conn.prepareStatement(EXTRACT_FOR_USER);
-            prstm.setInt(1,userId);
+            prstm.setInt(1, userId);
             rs = prstm.executeQuery();
             list = new ArrayList<>();
-            while(rs.next()){
+            while (rs.next()) {
                 Application app = new Application(rs.getString("application_id"),
                         rs.getInt("sleeps"), rs.getString("checkIn"), rs.getString("checkOut"),
-                        rs.getString("email"), rs.getString("name"));
+                        rs.getString("email"), rs.getString("name"), userId);
                 list.add(app);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
 
         }
         return list;

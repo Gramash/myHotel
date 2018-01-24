@@ -11,12 +11,21 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Manager Task</title>
+    <title>
+        Manager Task
+    </title>
     <style>
+
+        body {
+            margin-left: 2%;
+        }
+
         table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
             width: 60%;
+            margin-left: 10px;
+
         }
 
         td, th {
@@ -28,9 +37,9 @@
         tr:nth-child(even) {
             background-color: #dddddd;
         }
+
         p {
-            text-indent: 50px;
-            margin-left: 100px;
+            text-indent: 10px;
         }
     </style>
 </head>
@@ -39,11 +48,12 @@
 
 <jsp:include page="../../_menu.jsp"></jsp:include>
 
-<h3 style="margin-left: 2%">Manager Task</h3>
+<h3> Greetings ${loginedUser.userName}!</h3>
+<h4>Welcome to Your workplace. Have a nice day!</h4>
 
-<p style="margin-left: 2%"> Hello, This is a protected page!</p>
+<p>This is a protected page!</p>
 
-<table style="margin-left: 2%">
+<table name="orders">
     <tr>
         <td>Room #</td>
         <td>Sleeps</td>
@@ -68,9 +78,11 @@
         </tr>
     </c:forEach>
 </table>
-<br> <hr>
-<p style="margin-left: 2%">Pending Applications</p>
-<table style="margin-left: 2%">
+<br>
+<hr>
+<p>Pending Applications</p>
+
+<table id="applications">
     <tr>
         <td>Application#</td>
         <td>sleeps</td>
@@ -79,18 +91,55 @@
         <td>email</td>
         <td>name</td>
     </tr>
-
     <c:forEach items="${applList}" var="appl">
-        <tr>
-            <td>${appl.applId}</td>
-            <td>${appl.sleeps}</td>
-            <td>${appl.checkIn}</td>
-            <td>${appl.checkOut}</td>
-            <td>${appl.email}</td>
-            <td>${appl.name}</td>
-        </tr>
+        <form method="POST" action="${pageContext.request.contextPath}/filterDB">
+            <tr>
+                <input name="userID" type="hidden" value="${appl.userId}">
+                <td><input name="appId" type="hidden" value="${appl.applId}"> ${appl.applId}</td>
+                <td><input name="sleeps" type="hidden" value="${appl.sleeps}">${appl.sleeps}</td>
+                <td><input name="checkIn" type="hidden" value="${appl.checkIn}">${appl.checkIn}</td>
+                <td><input name="checkOut" type="hidden" value="${appl.checkOut}">${appl.checkOut}</td>
+                <td>${appl.email}</td>
+                <td>${appl.name}</td>
+                <td><input type="submit" value="Submit"></td>
+            </tr>
+        </form>
     </c:forEach>
 </table>
+
+
+<br>
+<hr>
+<form method="post" action="${pageContext.request.contextPath}/response">
+    <p>Suitable products for Your query ${appId} for userId${user_id}</p>
+    <table style="margin-left: 10px" bgcolor="#fffafa" id="queryResults">
+        <tr>
+            <th>Room #</th>
+            <th>Sleeps</th>
+            <th>Price</th>
+            <th>image</th>
+            <th>send response</th>
+        </tr>
+        <c:forEach items="${productList}" var="product" varStatus="loop">
+
+            <tr>
+                <input type="hidden" value="${appId}" name="appId"/>
+                <input type="hidden" value="${user_id}" name="userId"/>
+                <td><input style="  color: white" name="roomNo" type="hidden"
+                           value="${product.roomNo}"> ${product.roomNo}
+                </td>
+                <td>${product.sleeps}</td>
+                <td>${product.price}</td>
+                <td>
+                    <img src="${product.image}" height="125" width="150">
+                </td>
+                <td><input type="submit" value="Submit"/></td>
+            </tr>
+
+        </c:forEach>
+    </table>
+</form>
+
 
 </body>
 </html>

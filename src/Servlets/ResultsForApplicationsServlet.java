@@ -2,9 +2,12 @@ package Servlets;
 
 import JavaBeans.Application;
 import JavaBeans.Order;
+import JavaBeans.Product;
 import MySQL.ApplicationsTable;
 import MySQL.OrdersTable;
 import MySQL.ProductTable;
+import com.sun.org.apache.xpath.internal.operations.Or;
+import sun.rmi.server.InactiveGroupException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,19 +16,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/managerTask")
-public class ManagerTaskServlet extends HttpServlet {
+@WebServlet("/filterDB")
+public class ResultsForApplicationsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Order> orderList;
-        orderList = OrdersTable.getOrderManager();
-        List applList = ApplicationsTable.extractAll();
-        req.setAttribute("applList", applList);
+        String str = req.getParameter("sleeps");
+        String checkIn = req.getParameter("checkIn");
+        String checkOut = req.getParameter("checkOut");
+        String userId = req.getParameter("userID");
+        List<Order> orderList = OrdersTable.getOrderManager();
+        List<Product> listSuggestions = ProductTable.selectSuitable(Integer.parseInt(str), checkIn, checkOut);
+        List<Application> appList = ApplicationsTable.extractAll();
         req.setAttribute("orderList", orderList);
+        req.setAttribute("applList", appList);
+        req.setAttribute("productList", listSuggestions);
+        req.setAttribute("appId", req.getParameter("appId"));
+        req.setAttribute("user_id", userId);
+
         RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/managerTaskView.jsp");
+
         rq.forward(req, resp);
     }
 

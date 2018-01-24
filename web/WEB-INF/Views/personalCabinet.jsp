@@ -11,22 +11,48 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Personal Cabinet</title>
+    <title>Dashboard</title>
     <style>
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 40%;
+        @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+
+        body {
+            background: -webkit-linear-gradient(left, #25c481, #25b7c4);
+            background: linear-gradient(to right, #25c481, #25b7c4);
+            font-family: 'Roboto', sans-serif;
         }
 
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
+        table {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+
+            width: 60%;
+
+        }
+
+        h3 {
+            color: white;
+            text-align: center;
+        }
+
+        table td, table th {
+            border: 1px solid #ddd;
             padding: 8px;
         }
 
-        tr:nth-child(even) {
-            background-color: #dddddd;
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            color: #5b5b5b;
+
         }
     </style>
 </head>
@@ -35,20 +61,20 @@
 
 <jsp:include page="../../_menu.jsp"></jsp:include>
 
-<h3>Hello: ${loginedUser.userName} </h3>
+<h3 style="color: mintcream">Hello: ${loginedUser.userName} </h3>
 
 This is a protected page <br>
 
 <p style="color: black;">${message}</p>
 <p style="color: #2aabd2">${noOrders}</p>
 
-<table border="1">
+<table style="background-color: mintcream">
     <tr>
         <td>roomNo</td>
         <td>Sleeps</td>
         <td>checkIn</td>
         <td>checkOut</td>
-        <td>Price</td>
+        <td>Total Price</td>
     </tr>
     <c:forEach items="${orderList}" var="order">
         <tr>
@@ -60,10 +86,11 @@ This is a protected page <br>
         </tr>
     </c:forEach>
 </table>
-<br><hr>
+<br>
+<hr>
 <p> Your Applications</p>
 <p>${applMessage}</p>
-<table style="margin-left: 2%">
+<table style="background-color: mintcream">
     <tr>
         <td>Application#</td>
         <td>sleeps</td>
@@ -84,6 +111,34 @@ This is a protected page <br>
         </tr>
     </c:forEach>
 </table>
+<p>Offers for Your applications </p>
+<p >${offerMessage}</p>
+<table style="background-color: mintcream">
+    <tr>
+        <td>Application#</td>
+        <td>room #</td>
+        <td>Sleeps</td>
+        <td>Check In</td>
+        <td>Check Out</td>
+        <td>$/day</td>
+        <td></td>
+    </tr>
+
+    <c:forEach items="${offerList}" var="offer" >
+        <tr>
+            <td>${offer.applicationId}</td>
+            <td>${offer.roomNo}</td>
+            <td>${offer.sleeps}</td>
+            <td>${offer.checkIn}</td>
+            <td>${offer.checkOut}</td>
+            <td>${offer.price}</td>
+            <td>
+                <img src="${offer.image}" height="125" width="150">
+            </td>
+        </tr>
+    </c:forEach>
+</table>
+
 
 </body>
 </html>

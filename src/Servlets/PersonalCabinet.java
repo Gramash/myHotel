@@ -1,6 +1,7 @@
 package Servlets;
 
 import JavaBeans.Application;
+import MySQL.ApplicationResponseTable;
 import MySQL.ApplicationsTable;
 import MySQL.OrdersTable;
 import Utils.AppUtils;
@@ -23,16 +24,24 @@ public class PersonalCabinet extends HttpServlet {
             System.out.println("PersonalCabinet#doGet");
             List orderList = OrdersTable.getOrderByUserId(AppUtils.getLoginedUser(req.getSession()).getUserID());
             List applList = ApplicationsTable.extractForUser(AppUtils.getLoginedUser(req.getSession()).getUserID());
+            List offerList = ApplicationResponseTable.getResponseForUser(AppUtils.getLoginedUser(req.getSession()).getUserID());
+            System.out.println(offerList);
+            req.setAttribute("orderList", orderList);
+            req.setAttribute("applList", applList);
+            req.setAttribute("offerList", offerList);
             if (orderList.size() == 0) {
                 req.setAttribute("message", "You have no pending orders yet" + "\n Proceed products to make an order");
             }
-            if(applList.size()==0){
+            if (applList.size() == 0) {
                 req.setAttribute("applMessage", "You have no applications yet");
             }
-            req.setAttribute("orderList", orderList);
-            req.setAttribute("applList", applList);
+            if (offerList.size() == 0) {
+                req.setAttribute("offerMessage", "You have no offers for your applications");
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
+            RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
+            rq.forward(req, resp);
         }
         RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
         rq.forward(req, resp);

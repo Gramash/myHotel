@@ -3,10 +3,12 @@ package MySQL;
 
 import JavaBeans.Order;
 import JavaBeans.UserAccount;
+import Utils.DateUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +25,11 @@ public class OrdersTable {
                     "from orders \n" +
                     "inner join products ON products.roomNo = orders.product_id\n" +
                     "inner join users ON users.user_id = orders.user_id";
-    private static final String UPDATE_BEFORE_QUERY = "DELETE FROM orders WHERE ts < (NOW() - INTERVAL 1 MINUTE ) AND paid='0'";
+    private static final String UPDATE_BEFORE_QUERY = "DELETE FROM orders WHERE ts < (NOW() - INTERVAL 10 MINUTE ) AND paid='0'";
 
-    private static void updateBeforeQuery (){
+    private static final String FIND_BY_ID = "select form orders where roomNo=?";
+
+    private static void updateBeforeQuery() {
         try (Connection conn = ConnectionUtils.getConnection()) {
             PreparedStatement prstm = conn.prepareStatement(UPDATE_BEFORE_QUERY);
             prstm.execute();
@@ -63,8 +67,11 @@ public class OrdersTable {
             getOrdersByUserId.setInt(k, userId);
             rs = getOrdersByUserId.executeQuery();
             while (rs.next()) {
+                String checkIn = rs.getString("checkIn");
+                String checkOut = rs.getString("checkOut");
+                float daysCount = DateUtils.countDays(checkIn, checkOut);
                 order = new Order(rs.getInt("roomNo"), rs.getInt("sleeps"),
-                       rs.getDate("checkIn"), rs.getDate("checkOut"), rs.getDouble("price"));
+                        rs.getDate("checkIn"), rs.getDate("checkOut"), (rs.getDouble("price") * daysCount));
                 orderList.add(order);
             }
         } catch (Exception e) {
@@ -95,5 +102,6 @@ public class OrdersTable {
         }
         return orderList;
     }
+
 
 }

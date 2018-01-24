@@ -42,15 +42,17 @@ public class ProductViewServlet extends HttpServlet {
         }
 
         int userId = AppUtils.getLoginedUser(req.getSession()).getUserID();
-        System.out.println(userId);
         int productId = Integer.parseInt(req.getParameter("id"));
-        System.out.println(productId);
-        System.out.println(req.getParameter("checkIn"));
         String checkIn = req.getParameter("checkIn");
         String checkOut = req.getParameter("checkOut");
 
+        if (ProductTable.isTakenById(productId, checkIn, checkOut)) {
+            System.out.println("isTaken");
+            req.setAttribute("message", "taken for this dates");
+            doGet(req, resp);
+        }
         if (OrdersTable.insertOrder(userId, productId, checkIn, checkOut)) {
-            req.setAttribute("confirmMessage", "You have successfully made an order.");
+            req.setAttribute("message", "You have successfully made an order.");
             doGet(req, resp);
         }
 

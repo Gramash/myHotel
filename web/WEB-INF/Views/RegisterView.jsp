@@ -34,7 +34,7 @@
             color: white;
         }
 
-        #message {
+        #message, #loginMessage{
             display: none;
             background: #f1f1f1;
             color: #000;
@@ -43,9 +43,13 @@
 
         }
 
-        #message p {
+        #message p, #loginMessage p {
             padding: 10px 20px;
             font-size: 90%
+        }
+
+        .neutral{
+            color: black;
         }
 
         .valid {
@@ -80,7 +84,8 @@
             <tr>
                 <td>
                     <label for="id"></label>
-                    <input type="text" id="id" placeholder="Login" name="userLogin" required/>
+                    <input type="text" id="id" placeholder="Login" name="userLogin"
+                           pattern="^(?=.*[A-Za-z0-9]$)[A-Za-z][A-Za-z\d._]{7,19}$" required/>
                 </td>
             </tr>
             <tr>
@@ -93,7 +98,8 @@
             <tr>
                 <td>
                     <label for="name"></label>
-                    <input type="text" id="name" placeholder="First Name" name="userName" required/>
+                    <input type="text" id="name" placeholder="First Name" name="userName"
+                           pattern="" required/>
                 </td>
             </tr>
             <tr>
@@ -104,8 +110,8 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="Submit"/>
-                    <a style="color:white" href="${pageContext.request.contextPath}/">Cancel</a>
+                    <input style="color: mintcream" type="submit" value="Submit"/>
+                    <a style="color:mintcream" href="${pageContext.request.contextPath}/">Cancel</a>
                 </td>
             </tr>
         </table>
@@ -119,9 +125,17 @@
     <p id="number" class="invalid">A <b>number</b></p>
     <p id="length" class="invalid">Minimum <b>8 characters</b></p>
 </div>
+<div id="loginMessage" align="center">
+    <h4>Login must consist of the following:</h4>
+    <p  id="letter2" class="neutral">Start and end with a letter or a number</p>
+    <p id="capital2" class="neutral">Can have "_" or "."</p>
+    <p id="number2" class="neutral">Must be 8 to 20 symbols long</p>
+    <p></p>
+</div>
 
 <script>
     var myInput = document.getElementById("psw");
+    var myInput2 = document.getElementById("id")
     var letter = document.getElementById("letter");
     var capital = document.getElementById("capital");
     var number = document.getElementById("number");
@@ -135,6 +149,12 @@
     // When the user clicks outside of the password field, hide the message box
     myInput.onblur = function () {
         document.getElementById("message").style.display = "none";
+    }
+    myInput2.onfocus = function () {
+        document.getElementById("loginMessage").style.display = "block";
+    }
+    myInput2.onblur = function () {
+        document.getElementById("loginMessage").style.display = "none";
     }
 
     // When the user starts to type something inside the password field
