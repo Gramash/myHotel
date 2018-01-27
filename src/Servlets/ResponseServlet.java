@@ -16,7 +16,7 @@ import java.util.List;
 public class ResponseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.sendRedirect(req.getContextPath()+"/managerTask");
     }
 
     @Override
@@ -28,7 +28,6 @@ public class ResponseServlet extends HttpServlet {
                 Integer.parseInt(req.getParameter("userId")), Integer.parseInt(req.getParameter("roomNo")))){
             System.out.println("response sent");
         }
-        RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/managerTaskView.jsp");
-        rq.forward(req,resp);
+        doGet(req,resp);
     }
 }

@@ -1,10 +1,12 @@
 package Servlets;
 
 import JavaBeans.Application;
+import JavaBeans.UserAccount;
 import MySQL.ApplicationResponseTable;
 import MySQL.ApplicationsTable;
 import MySQL.OrdersTable;
 import Utils.AppUtils;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 @WebServlet("/personalCabinet")
@@ -50,6 +53,11 @@ public class PersonalCabinet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int productId = Integer.parseInt(req.getParameter("prodId"));
+        Date checkIn = Date.valueOf(req.getParameter("checkIn"));
+        Date checkOut = Date.valueOf(req.getParameter("checkOut"));
+        System.out.println(productId + " " + checkIn + " " + checkOut);
+        OrdersTable.confirmOrder(productId,checkIn,checkOut);
         doGet(req, resp);
     }
 }

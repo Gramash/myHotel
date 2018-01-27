@@ -150,9 +150,11 @@
     myInput.onblur = function () {
         document.getElementById("message").style.display = "none";
     }
+    // show login pattern when user clicks on loging field
     myInput2.onfocus = function () {
         document.getElementById("loginMessage").style.display = "block";
     }
+    //close login field when login intup is not active
     myInput2.onblur = function () {
         document.getElementById("loginMessage").style.display = "none";
     }

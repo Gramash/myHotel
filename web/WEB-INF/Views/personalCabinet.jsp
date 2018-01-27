@@ -11,20 +11,25 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Dashboard</title>
     <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
 
         body {
+
             background: -webkit-linear-gradient(left, #25c481, #25b7c4);
             background: linear-gradient(to right, #25c481, #25b7c4);
             font-family: 'Roboto', sans-serif;
         }
 
         table {
+            margin-left: 10%;
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
-
             width: 60%;
 
         }
@@ -32,9 +37,11 @@
         h3 {
             color: white;
             text-align: center;
+            margin-left: 10%;
         }
 
         table td, table th {
+
             border: 1px solid #ddd;
             padding: 8px;
         }
@@ -63,10 +70,9 @@
 
 <h3 style="color: mintcream">Hello: ${loginedUser.userName} </h3>
 
-This is a protected page <br>
 
-<p style="color: black;">${message}</p>
-<p style="color: #2aabd2">${noOrders}</p>
+<p style="color: mintcream; margin-left: 10%;">${message}</p>
+<p style="color: #2aabd2; margin-left: 10%;">${noOrders}</p>
 
 <table style="background-color: mintcream">
     <tr>
@@ -75,21 +81,41 @@ This is a protected page <br>
         <td>checkIn</td>
         <td>checkOut</td>
         <td>Total Price</td>
+        <td>Payment due date</td>
     </tr>
     <c:forEach items="${orderList}" var="order">
-        <tr>
-            <td>${order.roomNo}</td>
-            <td>${order.sleeps}</td>
-            <td>${order.checkIn}</td>
-            <td>${order.checkOut}</td>
-            <td>${order.price}</td>
-        </tr>
+        <form method="post" action="${pageContext.request.contextPath}/personalCabinet">
+            <tr>
+                <td>
+                    <input name="prodId" value="${order.roomNo}" type="hidden">
+                        ${order.roomNo}
+                </td>
+                <td>${order.sleeps}</td>
+                <td>
+                    <input name="checkIn" value="${order.checkIn}" type="hidden">
+                        ${order.checkIn}
+                </td>
+                <td>
+                    <input name="checkOut" value="${order.checkOut}" type="hidden">
+                        ${order.checkOut}
+                </td>
+                <td>${order.price}</td>
+                <td>
+                    <c:if test="${order.paid==null}">paid-up</c:if>
+                    <c:if test="${order.paid!=null}">${order.paid}</c:if>
+                </td>
+                <td>
+
+                    <input type="submit" value="Confirm">
+                </td>
+            </tr>
+        </form>
     </c:forEach>
 </table>
 <br>
 <hr>
-<p> Your Applications</p>
-<p>${applMessage}</p>
+<p style="margin-left: 10%; color:mintcream;"> Your Applications</p>
+<p style="margin-left: 10%; color:mintcream;">${applMessage}</p>
 <table style="background-color: mintcream">
     <tr>
         <td>Application#</td>
@@ -111,8 +137,9 @@ This is a protected page <br>
         </tr>
     </c:forEach>
 </table>
-<p>Offers for Your applications </p>
-<p >${offerMessage}</p>
+<br> <hr>
+<p style="margin-left: 10%; color:mintcream;">Offers for Your applications </p>
+<p style="margin-left: 10%; color:mintcream;">${offerMessage}</p>
 <table style="background-color: mintcream">
     <tr>
         <td>Application#</td>
@@ -122,20 +149,38 @@ This is a protected page <br>
         <td>Check Out</td>
         <td>$/day</td>
         <td></td>
+        <td>Book It!</td>
     </tr>
 
-    <c:forEach items="${offerList}" var="offer" >
-        <tr>
-            <td>${offer.applicationId}</td>
-            <td>${offer.roomNo}</td>
-            <td>${offer.sleeps}</td>
-            <td>${offer.checkIn}</td>
-            <td>${offer.checkOut}</td>
-            <td>${offer.price}</td>
-            <td>
-                <img src="${offer.image}" height="125" width="150">
-            </td>
-        </tr>
+    <c:forEach items="${offerList}" var="offer">
+        <form method="post" action="${pageContext.request.contextPath}/productView">
+            <tr>
+                <td>
+                    <input name="appId" type="hidden" value="${offer.applicationId}">
+                        ${offer.applicationId}
+                </td>
+                <td>
+                    <input name="id" type="hidden" value="${offer.roomNo}"/>
+                        ${offer.roomNo}
+                </td>
+                <td>${offer.sleeps}</td>
+                <td>
+                    <input name="checkIn" type="hidden" value="${offer.checkIn}"/>
+                        ${offer.checkIn}
+                </td>
+                <td>
+                    <input name="checkOut" type="hidden" value="${offer.checkOut}"/>
+                        ${offer.checkOut}
+                </td>
+                <td>${offer.price}</td>
+                <td>
+                    <img src="${offer.image}" height="125" width="150">
+                </td>
+                <td>
+                    <input type="submit" value="Book It!">
+                </td>
+            </tr>
+        </form>
     </c:forEach>
 </table>
 

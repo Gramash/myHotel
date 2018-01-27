@@ -9,24 +9,42 @@ public class Order {
     private Date checkOut;
     private int sleeps;
     private double price;
-    private boolean paid;
+    private Date paid;
+
+    public Date getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Date paid) {
+        this.paid = paid;
+    }
+
     private UserAccount user;
 
-    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price) {
+    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, Date paid) {
         this.roomNo = roomNo;
         this.sleeps = sleeps;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.price = price;
-    }
-
-    public boolean isPaid() {
-        return paid;
-    }
-
-    public void setPaid(boolean paid) {
         this.paid = paid;
     }
+
+    public Order(){
+
+    }
+
+    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, Date paid, UserAccount user) {
+        this.roomNo = roomNo;
+        this.sleeps = sleeps;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.price = price;
+        this.paid = paid;
+        this.user = user;
+
+    }
+
 
     public UserAccount getUser() {
         return user;
@@ -36,21 +54,6 @@ public class Order {
         this.user = user;
     }
 
-    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, boolean paid, UserAccount user) {
-        this.roomNo = roomNo;
-        this.sleeps = sleeps;
-        this.checkIn = checkIn;
-        this.checkOut = checkOut;
-
-        this.price = price;
-        this.paid = paid;
-        this.user = user;
-
-    }
-
-
-    public Order() {
-    }
 
     public int getRoomNo() {
         return roomNo;

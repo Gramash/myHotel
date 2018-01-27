@@ -24,7 +24,8 @@ public class ProductViewServlet extends HttpServlet {
         List<Product> productList;
         productList = ProductTable.extractAll();
         request.setAttribute("productList", productList);
-
+        String url = request.getRequestURI();
+        System.out.println("doGet");
         RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/ProductView.jsp");
         rq.forward(request, response);
 
@@ -45,15 +46,20 @@ public class ProductViewServlet extends HttpServlet {
         int productId = Integer.parseInt(req.getParameter("id"));
         String checkIn = req.getParameter("checkIn");
         String checkOut = req.getParameter("checkOut");
+        String appId = req.getParameter("appId");
 
         if (ProductTable.isTakenById(productId, checkIn, checkOut)) {
             System.out.println("isTaken");
             req.setAttribute("message", "taken for this dates");
+
             doGet(req, resp);
-        }
-        if (OrdersTable.insertOrder(userId, productId, checkIn, checkOut)) {
-            req.setAttribute("message", "You have successfully made an order.");
-            doGet(req, resp);
+        } else {
+
+            if (OrdersTable.insertOrder(userId, productId, checkIn, checkOut, appId)) {
+                System.out.println("insert order");
+                req.setAttribute("message", "You have successfully made an order.");
+                doGet(req, resp);
+            }
         }
 
 

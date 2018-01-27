@@ -105,6 +105,7 @@
 <jsp:include page="../../_menu.jsp"></jsp:include>
 
 <div class="container">
+    <h3>${message}</h3>
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
@@ -148,7 +149,6 @@
     <button type="button" style="background-color: #27c4b1; color: mintcream" class="btn btn-info btn-lg"
             data-toggle="modal" data-target="#myModal">Make application
     </button>
-    <h3>${message}</h3>
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
             <form method="POST" action="${pageContext.request.contextPath}/applicationForm" }>

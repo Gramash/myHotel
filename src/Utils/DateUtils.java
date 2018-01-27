@@ -2,15 +2,24 @@ package Utils;
 
 import JavaBeans.UserAccount;
 import config.SecurityConfig;
+import sun.util.calendar.LocalGregorianCalendar;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
 
+    public static void main(String[] args) throws ParseException {
+        String str = "2018-01-26";
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = df.parse(str);
+    }
 
-    public static String formatDate (String date, String initDateFormat, String endDateFormat){
+
+    public static String formatDate(String date, String initDateFormat, String endDateFormat) {
 
         Date initDate = null;
         try {
@@ -22,15 +31,15 @@ public class DateUtils {
         return formatter.format(initDate);
     }
 
-    public static boolean datesOverlap (String startDateStr1, String endDateStr1, String startDateStr2, String endDateStr2){
+    public static boolean datesOverlap(String startDateStr1, String endDateStr1, String startDateStr2, String endDateStr2) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date startDate1 = sdf.parse(startDateStr1);
             Date startDate2 = sdf.parse(startDateStr2);
             Date endDate1 = sdf.parse(endDateStr1);
             Date endDate2 = sdf.parse(endDateStr2);
-            if((startDate1.equals(endDate2)||(startDate1.before(endDate2)) &&
-                    (startDate2.equals(endDate1)||(startDate2).before(endDate1)))){
+            if (((startDate1.before(endDate2)) &&
+                    (startDate2.equals(endDate1) || (startDate2).before(endDate1)))) {
                 return true;
             }
         } catch (ParseException e) {
@@ -40,9 +49,9 @@ public class DateUtils {
         return false;
     }
 
-    public static float countDays (String firstDate, String secondDate ) {
+    public static float countDays(String firstDate, String secondDate) {
         SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-        long diff=0;
+        long diff = 0;
         try {
             Date date1 = myFormat.parse(firstDate);
             Date date2 = myFormat.parse(secondDate);
@@ -50,6 +59,45 @@ public class DateUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return diff / (1000*60*60*24);
+        return diff / (1000 * 60 * 60 * 24);
     }
+
+    public static java.sql.Date add2Days(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 2);
+        date = calendar.getTime();
+        return new java.sql.Date(date.getTime());
+    }
+
+    public static boolean isBeforeToday(String dateStr) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = df.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("cant parse date DateUtils#isBefore2day");
+        }
+        Calendar c = Calendar.getInstance();
+
+// set the calendar to start of today
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+// and get that as a Date
+        Date today = c.getTime();
+
+        c.setTime(date);
+        Date date2Check = c.getTime();
+        if (date2Check.before(today)) {
+            System.out.println("Doctor Who?");
+            return true;
+        }
+        return false;
+    }
+
+
 }

@@ -5,6 +5,16 @@ public class Product {
     private double price;
     private int sleeps;
     private String image;
+    private boolean taken;
+    
+
+    public boolean isTaken() {
+        return taken;
+    }
+
+    public void setTaken(boolean taken) {
+        this.taken = taken;
+    }
 
     public String getImage() {
         return image;

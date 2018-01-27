@@ -1,6 +1,7 @@
 package MySQL;
 
 import JavaBeans.Application;
+import Utils.DateUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,14 +15,15 @@ import java.util.ResourceBundle;
 public class ApplicationsTable {
 
 
-    private static final String INSERT_APPLICATION = "insert into applications values (?,?,?,?,?)";
+    private static final String INSERT_APPLICATION = "insert into applications values (?,?,?,?,?, DEFAULT )";
     private static final String EXTRACT_ALL = "select applications.user_id, application_id, sleeps, checkIn, checkOut, users.email, users.name " +
             "from applications " +
-            "inner join users ON users.user_id = applications.user_id";
-    private static final String EXTRACT_FOR_USER = "select application_id, sleeps, checkIn, checkOut, users.email, users.name\n" +
-            "from applications\n" +
-            "inner join users ON users.user_id = applications.user_id \n" +
-            "where applications.user_id = ?";
+            "inner join users ON users.user_id = applications.user_id where completed = 0";
+    private static final String EXTRACT_FOR_USER = "select application_id, sleeps, checkIn, checkOut, users.email, users.name " +
+            "from applications " +
+            "inner join users ON users.user_id = applications.user_id " +
+            "where applications.user_id = ? and completed = 0";
+    private static final String CLOSE_APPLICATION = "update applications set completed = 1 where application_id = ?";
 
     private static int createApplId() {
         Random random = new Random();
@@ -29,6 +31,10 @@ public class ApplicationsTable {
     }
 
     public static boolean insertApplication(int userId, int sleeps, String checkIn, String checkOut) {
+
+        if(DateUtils.isBeforeToday(checkIn)){
+            return false;
+        }
         try (Connection conn = ConnectionUtils.getConnection()) {
             PreparedStatement prstm = conn.prepareStatement(INSERT_APPLICATION);
             int k = 1;
@@ -82,5 +88,18 @@ public class ApplicationsTable {
 
         }
         return list;
+    }
+
+    public static boolean closeApplication(String appId) {
+        try (Connection conn = ConnectionUtils.getConnection()) {
+            PreparedStatement prstm = conn.prepareStatement(CLOSE_APPLICATION);
+            prstm.setString(1, appId);
+            prstm.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("cannot closeApplication");
+        }
+        return false;
     }
 }

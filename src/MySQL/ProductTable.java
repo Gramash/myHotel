@@ -1,5 +1,6 @@
 package MySQL;
 
+import JavaBeans.Order;
 import JavaBeans.Product;
 import JavaBeans.UserAccount;
 import Utils.DateUtils;
@@ -10,14 +11,17 @@ import java.util.List;
 
 public class ProductTable {
 
-    private static final String FIND_ALL_PRODUCTS = "select * from products order by roomNo";
-    private static final String FIND_SUITABLE = "Select * from products " +
+    private static final String FIND_ALL_PRODUCTS = "SELECT * FROM products ORDER BY roomNo";
+    private static final String FIND_SUITABLE = "SELECT * FROM products " +
             "LEFT JOIN orders ON products.roomNo = orders.product_id " +
             "WHERE sleeps =?";
-    private static final String FIND_BY_ID = "Select * from products " +
+    private static final String FIND_BY_ID = "SELECT * FROM products " +
             "LEFT JOIN orders ON products.roomNo = orders.product_id " +
             "WHERE roomNo=?";
-
+    private static final String FIND_PRODUCTS_ORDERS = "SELECT * FROM products " +
+            "LEFT JOIN orders ON products.roomNo = orders.product_id ";
+    private static final String MARK_AS_TAKEN = "UPDATE products SET isTaken=1 where roomNo = ?";
+    private static final String MARK_AS_FREE = "UPDATE products SET isTaken=0 where roomNo = ?";
 
     public static List<Product> extractAll() {
         List<Product> productList = new ArrayList<>();
@@ -30,6 +34,7 @@ public class ProductTable {
                 product.setPrice(Double.parseDouble(rs.getString("price")));
                 product.setSleeps(Integer.parseInt(rs.getString("sleeps")));
                 product.setImage((rs.getString("image")));
+                product.setTaken(rs.getBoolean("isTaken"));
                 productList.add(product);
             }
         } catch (Exception e) {
@@ -84,5 +89,34 @@ public class ProductTable {
         }
         return false;
     }
+
+    public static boolean setTakenOrFree(int roomId, int i) {
+        try (Connection conn = ConnectionUtils.getConnection()) {
+            PreparedStatement prst = conn.prepareStatement(i == 0 ? MARK_AS_FREE : MARK_AS_TAKEN);
+            prst.setInt(1, roomId);
+            prst.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean setFree() {
+        try (Connection conn = ConnectionUtils.getConnection()) {
+            Statement prstm = conn.createStatement();
+            ResultSet rs = prstm.executeQuery(FIND_PRODUCTS_ORDERS);
+            while (rs.next()) {
+                if (rs.getDate("checkIn") == null) {
+                    setTakenOrFree(rs.getInt("roomNo"), 0);
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 }
