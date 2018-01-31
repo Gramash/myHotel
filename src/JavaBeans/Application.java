@@ -7,10 +7,12 @@ public class Application {
     private String checkOut;
     private String email;
     private String name;
-    private int userId;
+    private String clazz;
+    private int roomNo;
+    private double price;
+    private String image;
 
-
-    public Application(String applId, int sleeps, String checkIn, String checkOut, String email, String name, int userId) {
+    public Application(String applId, int sleeps, String clazz, String checkIn, String checkOut, String email, String name, int userId) {
         this.applId = applId;
         this.sleeps = sleeps;
         this.checkIn = checkIn;
@@ -18,7 +20,55 @@ public class Application {
         this.email = email;
         this.name = name;
         this.userId = userId;
+        this.clazz = clazz;
     }
+    public Application(String applId, int sleeps, String clazz, String checkIn,
+                       String checkOut, int roomNo, double price, String image) {
+        this.applId = applId;
+        this.sleeps = sleeps;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+
+        this.clazz = clazz;
+        this.roomNo = roomNo;
+        this.price = price;
+        this.image = image;
+    }
+
+    public int getRoomNo() {
+        return roomNo;
+    }
+
+    public void setRoomNo(int roomNo) {
+        this.roomNo = roomNo;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getimage() {
+        return image;
+    }
+
+    public void setimage(String image) {
+        this.image = image;
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    private int userId;
+
 
     public String getApplId() {
         return applId;

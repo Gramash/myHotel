@@ -27,7 +27,7 @@ public class ApplicationServlet extends HttpServlet {
         RequestDispatcher rq;
         try {
             if(!ApplicationsTable.insertApplication(user.getUserID(), Integer.parseInt(req.getParameter("sleeps")),
-                    req.getParameter("checkIn"), req.getParameter("checkOut"))){
+                    req.getParameter("class"), req.getParameter("checkIn"), req.getParameter("checkOut"))){
                 message = "Please specify correct date range";
                 req.setAttribute("message", message);
                 rq = req.getRequestDispatcher("/WEB-INF/Views/homeView.jsp");

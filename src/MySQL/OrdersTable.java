@@ -16,16 +16,18 @@ public class OrdersTable {
 
     private static final String INSERT_ORDER = "INSERT INTO orders VALUES (?,?, ?, ?, DEFAULT, DEFAULT )";
     private static final String GET_ORDER_BY_USERID =
-            "SELECT products.roomNo, products.sleeps, orders.checkIn, orders.checkOut, products.price, paid, ts " +
+            "SELECT products.roomNo, products.sleeps, orders.checkIn, orders.checkOut, products.price, paid, ts, products.class " +
                     "FROM orders " +
                     "INNER JOIN products ON products.roomNo = orders.product_id " +
                     "WHERE user_id = ?";
     private static final String GET_ALL_ORDERS =
-            "SELECT products.roomNo, products.sleeps, orders.checkIn, orders.checkOut, products.price, orders.paid, users.name, users.email, ts " +
+            "SELECT products.roomNo, products.sleeps, products.class, orders.checkIn, orders.checkOut, products.price, orders.paid, users.name, users.email, ts " +
                     "FROM orders " +
                     "INNER JOIN products ON products.roomNo = orders.product_id " +
                     "INNER JOIN users ON users.user_id = orders.user_id";
-    private static final String UPDATE_BEFORE_QUERY = "DELETE FROM orders WHERE ts < (NOW() - INTERVAL 1 MINUTE ) AND paid='0'";
+    private static final String UPDATE_BEFORE_QUERY = "DELETE FROM orders WHERE ts < (NOW() - INTERVAL 1 MINUTE ) " +
+            "AND paid='0' " +
+            "OR checkOut <= curdate()";
     private static final String CONFIRM_ORDER = "UPDATE ORDERS SET paid = 1 WHERE product_id =? AND checkIn=? AND checkOut=?";
 
     private static final String FIND_BY_ID = "select * form orders where roomNo=?";
@@ -55,7 +57,7 @@ public class OrdersTable {
             if (appId != null) {
                 ApplicationsTable.closeApplication(appId);
             }
-            ProductTable.setTakenOrFree(productId,1);
+            ProductTable.setTakenOrFree(productId, 1);
 
             return true;
         } catch (Exception e) {
@@ -86,7 +88,7 @@ public class OrdersTable {
                 }
                 order = new Order(rs.getInt("roomNo"), rs.getInt("sleeps"),
                         rs.getDate("checkIn"), rs.getDate("checkOut"),
-                        (rs.getDouble("price") * daysCount), date);
+                        (rs.getDouble("price") * daysCount), date, rs.getString("class"));
                 orderList.add(order);
             }
         } catch (Exception e) {
@@ -112,8 +114,8 @@ public class OrdersTable {
                 }
                 UserAccount user = UserTable.findByEmail(rs.getString("email"));
                 order = new Order(rs.getInt("roomNo"), rs.getInt("sleeps"),
-                        rs.getDate("checkIn"), rs.getDate("checkOut"), Double.parseDouble(rs.getString("price")),
-                        date, user);
+                        rs.getDate("checkIn"), rs.getDate("checkOut"),
+                        Double.parseDouble(rs.getString("price")), date, rs.getString("class"), user);
                 orderList.add(order);
             }
         } catch (Exception e) {

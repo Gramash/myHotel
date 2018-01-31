@@ -33,7 +33,7 @@ public class PersonalCabinet extends HttpServlet {
             req.setAttribute("applList", applList);
             req.setAttribute("offerList", offerList);
             if (orderList.size() == 0) {
-                req.setAttribute("message", "You have no pending orders yet" + "\n Proceed products to make an order");
+                req.setAttribute("message", "You have no pending orders yet" + "\n Proceed to products to make an order");
             }
             if (applList.size() == 0) {
                 req.setAttribute("applMessage", "You have no applications yet");
@@ -57,7 +57,7 @@ public class PersonalCabinet extends HttpServlet {
         Date checkIn = Date.valueOf(req.getParameter("checkIn"));
         Date checkOut = Date.valueOf(req.getParameter("checkOut"));
         System.out.println(productId + " " + checkIn + " " + checkOut);
-        OrdersTable.confirmOrder(productId,checkIn,checkOut);
+        OrdersTable.confirmOrder(productId, checkIn, checkOut);
         doGet(req, resp);
     }
 }

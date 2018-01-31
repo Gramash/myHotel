@@ -6,7 +6,25 @@ public class Product {
     private int sleeps;
     private String image;
     private boolean taken;
-    
+    private boolean available;
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    private String clazz;
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 
     public boolean isTaken() {
         return taken;

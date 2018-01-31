@@ -10,6 +10,15 @@ public class Order {
     private int sleeps;
     private double price;
     private Date paid;
+    private String clazz;
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
 
     public Date getPaid() {
         return paid;
@@ -21,20 +30,21 @@ public class Order {
 
     private UserAccount user;
 
-    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, Date paid) {
+    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, Date paid, String clazz) {
         this.roomNo = roomNo;
         this.sleeps = sleeps;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.price = price;
         this.paid = paid;
+        this.clazz = clazz;
     }
 
     public Order(){
 
     }
 
-    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, Date paid, UserAccount user) {
+    public Order(int roomNo, int sleeps, Date checkIn, Date checkOut, double price, Date paid, String clazz, UserAccount user) {
         this.roomNo = roomNo;
         this.sleeps = sleeps;
         this.checkIn = checkIn;
@@ -42,6 +52,8 @@ public class Order {
         this.price = price;
         this.paid = paid;
         this.user = user;
+        this.clazz = clazz;
+
 
     }
 

@@ -66,6 +66,22 @@
             color: #5b5b5b;
 
         }
+
+        button {
+            alignment: center;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        button:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -81,6 +97,7 @@
     <tr>
         <td>Room #</td>
         <td>Sleeps</td>
+        <td>Class</td>
         <td>Check In</td>
         <td>Check Out</td>
         <td>Price</td>
@@ -93,6 +110,7 @@
         <tr>
             <td>${order.roomNo}</td>
             <td>${order.sleeps}</td>
+            <td>${order.clazz}</td>
             <td>${order.checkIn}</td>
             <td>${order.checkOut}</td>
             <td>${order.price}</td>
@@ -113,6 +131,7 @@
     <tr>
         <td>Application#</td>
         <td>sleeps</td>
+        <td>class</td>
         <td>Check In</td>
         <td>Check Out</td>
         <td>email</td>
@@ -124,11 +143,12 @@
                 <input name="userID" type="hidden" value="${appl.userId}">
                 <td><input name="appId" type="hidden" value="${appl.applId}"> ${appl.applId}</td>
                 <td><input name="sleeps" type="hidden" value="${appl.sleeps}">${appl.sleeps}</td>
+                <td><input name="class" type="hidden" value="${appl.clazz}">${appl.clazz}</td>
                 <td><input name="checkIn" type="hidden" value="${appl.checkIn}">${appl.checkIn}</td>
                 <td><input name="checkOut" type="hidden" value="${appl.checkOut}">${appl.checkOut}</td>
                 <td>${appl.email}</td>
                 <td>${appl.name}</td>
-                <td><input type="submit" value="Submit"></td>
+                <td align="center"><input type="submit" class="btn btn-success" value="Find"></td>
             </tr>
         </form>
     </c:forEach>
@@ -147,55 +167,108 @@
         </c:if>
         <table id="queryResults" style=" background-color: mintcream ">
             <tr>
+                <th>image</th>
                 <th>Room #</th>
                 <th>Sleeps</th>
+                <th>Class</th>
                 <th>Price</th>
-                <th>image</th>
+
                 <c:if test="${appId==null}">
                     <th>isTaken</th>
+                    <th>isAvailable</th>
                 </c:if>
                 <c:if test="${appId!=null}">
                     <th>send response</th>
                 </c:if>
-
             </tr>
             <c:forEach items="${productList}" var="product" varStatus="loop">
-
-                <tr>
-                    <input type="hidden" value="${appId}" name="appId"/>
-                    <input type="hidden" value="${user_id}" name="userId"/>
-                    <td><input style="  color: white" name="roomNo" type="hidden"
-                               value="${product.roomNo}"> ${product.roomNo}
-                    </td>
-                    <td>${product.sleeps}</td>
-                    <td>${product.price}</td>
-                    <td>
-                        <img src="${product.image}" height="125" width="150">
-                    </td>
-                    <c:if test="${appId==null}">
+                <form method="POST" action="${pageContext.request.contextPath}/toggle">
+                    <tr>
                         <td>
-                            <c:if test="${!product.taken}">
-                                free
-                            </c:if>
-                            <c:if test="${product.taken}">
-                                <input type="date" name="checkIn" value="${checkIn}"/> <br>
-                                <input type="date" name="checkOut" value="${checkOut}"/> <br>
-                                <input type="submit" value="Check dates"/>
-                                <p style="color: black;">${datesCheck}</p>
-
-                            </c:if>
+                            <img src="${product.image}" height="125" width="150">
                         </td>
-                    </c:if>
-                    <c:if test="${appId!=null}">
-                        <td>
-                            <input type="submit" value="Submit"/>
+                        <input type="hidden" value="${appId}" name="appId"/>
+                        <input type="hidden" value="${user_id}" name="userId"/>
+                        <td><input style="  color: white" name="roomNo" type="hidden"
+                                   value="${product.roomNo}"> ${product.roomNo}
                         </td>
-                    </c:if>
-                </tr>
-
+                        <td>${product.sleeps}</td>
+                        <td>${product.clazz}</td>
+                        <td>${product.price}</td>
+                        <c:if test="${appId==null}">
+                            <td>
+                                <c:if test="${!product.taken}">
+                                    free
+                                </c:if>
+                                <c:if test="${product.taken}">
+                                    <input type="date" name="checkIn" value="${checkIn}"/> <br>
+                                    <input type="date" name="checkOut" value="${checkOut}"/> <br>
+                                    <input type="submit" value="Check dates"/>
+                                    <p style="color: black;">${datesCheck}</p>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${!product.available}">
+                                    <a style="color:red">out of order</a><br>
+                                </c:if>
+                            </td>
+                            <td>
+                                <button type="button" style="background-color: #27c4b1; color: mintcream"
+                                        class="btn btn-info btn-lg"
+                                        data-toggle="modal" data-target="#myModal${product.roomNo}">Update
+                                </button>
+                                <div class="modal fade" id="myModal${product.roomNo}" role="dialog">
+                                    <div class="modal-dialog">
+                                        <form method="POST" action="${pageContext.request.contextPath}/updateProduct">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">UPDATE room # ${product.roomNo}</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p style="color: black;">Please choose values to be updated</p>
+                                                    <label>Sleeps</label>
+                                                    <select name="sleeps" required>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select><br>
+                                                    <select name="class" required>
+                                                        <option value="A">A</option>
+                                                        <option value="B">B</option>
+                                                        <option value="C">C</option>
+                                                    </select><br>
+                                                    <label>Price</label>
+                                                    <input type="text" name="price" value="${product.price}"
+                                                           required><br>
+                                                    <label>Availability</label>
+                                                    <select name="available" required><br>
+                                                        <option value="true">available</option>
+                                                        <option value="false">out of order</option>
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" formaction="updateProduct">Update</button>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </c:if>
+                        <c:if test="${appId!=null}">
+                            <td align="center">
+                                <input type="submit" class="btn btn-warning" value="Submit"/>
+                            </td>
+                        </c:if>
+                    </tr>
+                </form>
             </c:forEach>
         </table>
     </form>
+
 
 </body>
 </html>

@@ -9,9 +9,11 @@ import java.sql.SQLException;
 
 public class UserTable {
 
-    private static final String FIND_BY_LOGIN_AND_PASS = "select * from users WHERE login = ? and password =?";
-    private static final String FIND_BY_LOGIN = "select * from users WHERE email = ? ";
-    private static final String INSERT_USER = "insert into users values (default,?,?,?,?, default)";
+
+    private static final String FIND_BY_LOGIN_AND_PASS = "SELECT * FROM users WHERE login = ? AND password =?";
+    private static final String FIND_BY_LOGIN = "SELECT * FROM users WHERE email = ? ";
+    private static final String INSERT_USER = "INSERT INTO users VALUES (default,?,?,?,?, default)";
+    private static final String FIND_BY_ID = "SELECT * FROM users where user_id= ?";
 
     public static UserAccount findByLogin(String login, String password) {
         try (Connection conn = ConnectionUtils.getConnection()) {
@@ -46,7 +48,7 @@ public class UserTable {
         try (Connection conn = ConnectionUtils.getConnection()) {
             PreparedStatement prstm = conn.prepareStatement(FIND_BY_LOGIN);
             int k = 1;
-            prstm.setString(k++, login);
+            prstm.setString(k, login);
             ResultSet rs = prstm.executeQuery();
             UserAccount user = getUserAccount(rs);
             if (user != null) return user;
@@ -71,5 +73,26 @@ public class UserTable {
             return false;
         }
     }
+
+    public static UserAccount findById(int userId) {
+        UserAccount user = null;
+        try (Connection conn = ConnectionUtils.getConnection()) {
+            PreparedStatement prstm = conn.prepareStatement(FIND_BY_ID);
+            int k = 1;
+            prstm.setInt(k, userId);
+            ResultSet rs = prstm.executeQuery();
+            rs.next();
+            user = new UserAccount();
+            user.setUserID(userId);
+            user.setEmail(rs.getString("email"));
+            user.setUserName(rs.getString("name"));
+            user.setUserLogin("login");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("cant find user By Id");
+        }
+        return user;
+    }
+
 
 }

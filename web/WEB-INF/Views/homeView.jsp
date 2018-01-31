@@ -98,6 +98,7 @@
             background-color: #f2f2f2;
             padding: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -152,7 +153,6 @@
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
             <form method="POST" action="${pageContext.request.contextPath}/applicationForm" }>
-
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Application Form</h4>
@@ -165,6 +165,13 @@
                             <option value="2">2</option>
                             <option value="3">3</option>
                         </select>
+                        <select name="class" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                        <br>
+                        <br>
                         <label>Check-In</label>
                         <input type="date" name="checkIn" required>
                         <label>Check-Out</label>

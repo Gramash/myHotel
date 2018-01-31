@@ -1,14 +1,11 @@
 package Servlets;
 
-import JavaBeans.Application;
+
 import JavaBeans.Order;
 import MySQL.ApplicationsTable;
 import MySQL.OrdersTable;
 import MySQL.ProductTable;
 import Utils.DateUtils;
-import com.sun.org.apache.xpath.internal.operations.Or;
-import sun.nio.ch.SelectorImpl;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,14 +22,14 @@ public class ManagerTaskServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("managerTask#doget");
         List<Order> orderList;
         orderList = OrdersTable.getOrderManager();
         List applList = ApplicationsTable.extractAll();
-        List productsList = ProductTable.extractAll();
+        List productsList = ProductTable.extractAll(true);
         req.setAttribute("productList", productsList);
         req.setAttribute("applList", applList);
         req.setAttribute("orderList", orderList);
-
         RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/managerTaskView.jsp");
         rq.forward(req, resp);
     }

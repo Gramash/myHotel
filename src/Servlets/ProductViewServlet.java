@@ -22,9 +22,9 @@ public class ProductViewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> productList;
-        productList = ProductTable.extractAll();
+        productList = ProductTable.extractAll(false);
         request.setAttribute("productList", productList);
-        String url = request.getRequestURI();
+        request.setAttribute("productView", "productView");
         System.out.println("doGet");
         RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/ProductView.jsp");
         rq.forward(request, response);
@@ -43,7 +43,7 @@ public class ProductViewServlet extends HttpServlet {
         }
 
         int userId = AppUtils.getLoginedUser(req.getSession()).getUserID();
-        int productId = Integer.parseInt(req.getParameter("id"));
+        int productId = Integer.parseInt(req.getParameter("prodId"));
         String checkIn = req.getParameter("checkIn");
         String checkOut = req.getParameter("checkOut");
         String appId = req.getParameter("appId");
@@ -51,14 +51,17 @@ public class ProductViewServlet extends HttpServlet {
         if (ProductTable.isTakenById(productId, checkIn, checkOut)) {
             System.out.println("isTaken");
             req.setAttribute("message", "taken for this dates");
-
             doGet(req, resp);
         } else {
-
             if (OrdersTable.insertOrder(userId, productId, checkIn, checkOut, appId)) {
                 System.out.println("insert order");
                 req.setAttribute("message", "You have successfully made an order.");
                 doGet(req, resp);
+            } else {
+                req.setAttribute("offerMessage", "Cant insert order.");
+                RequestDispatcher rq = req.getRequestDispatcher("personalCabinet");
+                rq.forward(req, resp);
+
             }
         }
 

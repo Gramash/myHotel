@@ -12,6 +12,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Products</title>
     <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
@@ -54,22 +55,95 @@
             color: #5b5b5b;
 
         }
+
+        .img:hover {
+            color: #424242;
+            -webkit-transition: all .3s ease-in;
+            -moz-transition: all .3s ease-in;
+            -ms-transition: all .3s ease-in;
+            -o-transition: all .3s ease-in;
+            transition: all .3s ease-in;
+            opacity: 1;
+            transform: scale(2.5);
+            -ms-transform: scale(2.5); /* IE 9 */
+            -webkit-transform: scale(2.5); /* Safari and Chrome */
+
+        }
+
+        select{
+            width: 150px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            align-content: center;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+
+        .input1{
+            width: 80%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
 
 </head>
 <body>
 <jsp:include page="../../_menu.jsp"/>
-
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%; padding-left: 15px">
+    <h3 class="w3-bar-item">Filter results</h3>
+    <form method="post" action="${pageContext.request.contextPath}/filterDB">
+        <label> rooms<br>
+            <select name ="sleeps">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </label>
+        <br>
+        <label> apartment class <br>
+            <select name="class">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+        </label>
+        <label> checkIn
+            <input type="date" name="checkIn" class="input1" />
+        </label>
+        <label> check Out
+            <input type="date" name="checkOut" class="input1"/>
+        </label>
+        <input type="submit" value="Filter" class="input1"/>
+    </form>
+</div>
 
 <h3 style="color: white">Available rooms</h3>
 
-<p style="color: blue;">${message}</p>
+<p style="color: blue;" align="center">${message}</p>
 
 
 <table align="center" style="background-color: mintcream">
-    <tr >
+    <tr>
         <th>image</th>
         <th>Sleeps</th>
+        <th>Class</th>
         <th>$/day</th>
         <th>Check-In</th>
         <th>Check-Out</th>
@@ -78,11 +152,12 @@
     <c:forEach items="${productList}" var="product" varStatus="loop">
         <form method="post" action="${pageContext.request.contextPath}/productView">
             <tr>
-                <input style="color: white" name="id" type="hidden" value="${product.roomNo}">
+                <input style="color: white" name="prodId" type="hidden" value="${product.roomNo}">
                 <td>
-                    <img src="${product.image}" height="125" width="150">
+                    <img class="img" src="${product.image}" height="125" width="150">
                 </td>
                 <td>${product.sleeps}</td>
+                <td>${product.clazz}</td>
                 <td>${product.price}</td>
                 <td align="center">
                     <input type="date" name="checkIn">
@@ -95,6 +170,7 @@
         </form>
     </c:forEach>
 </table>
+
 
 </body>
 </html>

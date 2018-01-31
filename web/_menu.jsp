@@ -34,23 +34,29 @@
             <li><a href="${pageContext.request.contextPath}/userInfo">My Account</a></li>
             <li>
                 <c:if test="${loginedUser==null}">
-                <a href="${pageContext.request.contextPath}/register">Join</a>
+                    <a href="${pageContext.request.contextPath}/register">Join</a>
                 </c:if>
             </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a>[ ${loginedUser.userLogin} ]</a>
             <li>
                 <c:if test="${loginedUser==null}">
-                    <a href="${pageContext.request.contextPath}/login">Sign In</a>
+                    <a href="${pageContext.request.contextPath}/login"> <span
+                            class="glyphicon glyphicon-log-in"></span> Sign In</a>
                 </c:if>
             </li>
             <li>
                 <c:if test="${loginedUser!=null}">
-                    <a href="${pageContext.request.contextPath}/logout">Sign Out</a>
+                    <a href="${pageContext.request.contextPath}/logout"><span
+                            class="glyphicon glyphicon-user"></span> Sign Out</a>
                 </c:if>
             </li>
+            </li>
 
-
-            <li><a>[ ${loginedUser.userLogin} ]</a></li>
         </ul>
+
+
     </div>
 </nav>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
