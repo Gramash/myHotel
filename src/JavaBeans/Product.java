@@ -68,10 +68,14 @@ public class Product {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("room # ==> ").append(roomNo).append(", ")
-                .append("sleeps ==> ").append(sleeps).append(", ")
-                .append("price ==> ").append(price);
-        return result.toString();
+        return "Product{" +
+                "roomNo=" + roomNo +
+                ", price=" + price +
+                ", sleeps=" + sleeps +
+                ", image='" + image + '\'' +
+                ", taken=" + taken +
+                ", available=" + available +
+                ", clazz='" + clazz + '\'' +
+                '}' + "\n";
     }
 }

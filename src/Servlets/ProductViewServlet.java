@@ -22,9 +22,18 @@ public class ProductViewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> productList;
-        productList = ProductTable.extractAll(false);
+        String orderBy = request.getParameter("orderBy");
+        String order = request.getParameter("order");
+        if (orderBy == null) {
+            orderBy = "roomNo";
+        }
+        if (order == null) {
+            order = "asc";
+        }
+        productList = ProductTable.extractAll(false, orderBy, order);
+        System.out.println("orderBy " + orderBy + " order " + order);
+        System.out.println(productList);
         request.setAttribute("productList", productList);
-        request.setAttribute("productView", "productView");
         System.out.println("doGet");
         RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/ProductView.jsp");
         rq.forward(request, response);

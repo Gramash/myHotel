@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ProductTable {
 
-    private static final String FIND_ALL_PRODUCTS = "SELECT * FROM products ORDER BY roomNo";
+    private static final String FIND_ALL_PRODUCTS = "SELECT * FROM products ORDER BY ";
     private static final String FIND_SUITABLE = "SELECT * FROM products " +
             "LEFT JOIN orders ON products.roomNo = orders.product_id " +
             "WHERE sleeps =? AND class=? AND available = 1";
@@ -24,11 +24,12 @@ public class ProductTable {
     private static final String CHANGE_AVAILABILITY = "UPDATE products SET available=? WHERE roomNo =?";
     private static final String UPDATE_PROD = "UPDATE products SET sleeps=?, price=?, available=?, class=? WHERE roomNo = ? ";
 
-    public static List<Product> extractAll(boolean manager) {
+    public static List<Product> extractAll(boolean manager, String orderBy, String order) {
         List<Product> productList = new ArrayList<>();
         try (Connection conn = ConnectionUtils.getConnection()) {
-            Statement prst = conn.createStatement();
-            ResultSet rs = prst.executeQuery(FIND_ALL_PRODUCTS);
+
+            PreparedStatement prst = conn.prepareStatement(FIND_ALL_PRODUCTS + orderBy + " " + order);
+            ResultSet rs = prst.executeQuery();
             while (rs.next()) {
                 if (!manager && !rs.getBoolean("available")) {
                     continue;

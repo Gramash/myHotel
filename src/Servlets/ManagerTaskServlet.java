@@ -26,7 +26,7 @@ public class ManagerTaskServlet extends HttpServlet {
         List<Order> orderList;
         orderList = OrdersTable.getOrderManager();
         List applList = ApplicationsTable.extractAll();
-        List productsList = ProductTable.extractAll(true);
+        List productsList = ProductTable.extractAll(true, "roomNo", "asc");
         req.setAttribute("productList", productsList);
         req.setAttribute("applList", applList);
         req.setAttribute("orderList", orderList);
