@@ -27,7 +27,6 @@ public class ProductTable {
     public static List<Product> extractAll(boolean manager, String orderBy, String order) {
         List<Product> productList = new ArrayList<>();
         try (Connection conn = ConnectionUtils.getConnection()) {
-
             PreparedStatement prst = conn.prepareStatement(FIND_ALL_PRODUCTS + orderBy + " " + order);
             ResultSet rs = prst.executeQuery();
             while (rs.next()) {
@@ -42,7 +41,6 @@ public class ProductTable {
                 product.setSleeps(Integer.parseInt(rs.getString("sleeps")));
                 product.setImage((rs.getString("image")));
                 product.setTaken(rs.getBoolean("isTaken"));
-
                 productList.add(product);
             }
         } catch (Exception e) {
@@ -128,30 +126,6 @@ public class ProductTable {
         return false;
     }
 
-    public static boolean toggleAvailablity(int roomNo) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
-            PreparedStatement prstm = conn.prepareStatement(FIND_BY_ID);
-            prstm.setInt(1, roomNo);
-            ResultSet rs = prstm.executeQuery();
-            rs.next();
-            if (rs.getBoolean("available")) {
-                prstm = conn.prepareStatement(CHANGE_AVAILABILITY);
-                prstm.setInt(1, 0);
-                prstm.setInt(2, roomNo);
-                prstm.executeUpdate();
-            } else {
-                prstm = conn.prepareStatement(CHANGE_AVAILABILITY);
-                prstm.setInt(1, 1);
-                prstm.setInt(2, roomNo);
-                prstm.executeUpdate();
-            }
-            return true;
-        } catch (SQLException e) {
-            System.out.println("cant toggle availability");
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     public static boolean updateProduct(int roomNo, int sleeps, double price, boolean available, String clazz) {
         try (Connection conn = ConnectionUtils.getConnection()) {

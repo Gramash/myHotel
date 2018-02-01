@@ -92,14 +92,13 @@
                 <td>
                     <label for="psw"></label>
                     <input type="password" id="psw" name="password" placeholder="Password"
-                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required/>
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}" required/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label for="name"></label>
-                    <input type="text" id="name" placeholder="First Name" name="userName"
-                           pattern="" required/>
+                    <input type="text" id="name" placeholder="First Name" name="userName" required/>
                 </td>
             </tr>
             <tr>
@@ -124,6 +123,7 @@
     <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
     <p id="number" class="invalid">A <b>number</b></p>
     <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+    <p id="length2" class="invalid"> Maximum <b>16 characters</b></p>
 </div>
 <div id="loginMessage" align="center">
     <h4>Login must consist of the following:</h4>
@@ -140,6 +140,7 @@
     var capital = document.getElementById("capital");
     var number = document.getElementById("number");
     var length = document.getElementById("length");
+    var length2 = document.getElementById("length2");
 
     // When the user clicks on the password field, show the message box
     myInput.onfocus = function () {
@@ -199,6 +200,15 @@
             length.classList.remove("valid");
             length.classList.add("invalid");
         }
+
+        if (myInput.value.length !=16) {
+            length2.classList.remove("valid");
+            length2.classList.add("invalid");
+        } else {
+            length2.classList.remove("invalid");
+            length2.classList.add("valid");
+        }
+
     }
 </script>
 

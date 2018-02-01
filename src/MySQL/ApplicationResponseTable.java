@@ -27,7 +27,6 @@ public class ApplicationResponseTable {
             prstm.setInt(k, userId);
             rs = prstm.executeQuery();
             ar = new ArrayList<>();
-            UserAccount user = UserTable.findById(userId);
             while (rs.next()) {
                 ar.add(new Application(rs.getString("application_id"), rs.getInt("sleeps"), rs.getString("class"),
                         rs.getString("checkIn"),rs.getString("checkOut"),

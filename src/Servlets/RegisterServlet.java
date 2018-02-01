@@ -1,6 +1,8 @@
 package Servlets;
 
 
+import Utils.PasswordEncryption;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,24 +31,19 @@ public class RegisterServlet extends HomeServlet {
             throws ServletException, IOException {
 
         String userLogin = request.getParameter("userLogin");
-        String password = request.getParameter("password");
+        String password = null;
         String userName = request.getParameter("userName");
         String email = request.getParameter("email");
-
-        if (userLogin.isEmpty() ||
-                password.isEmpty() ||
-                userName.isEmpty() ||
-                email.isEmpty()) {
-
-            String errorMessage = "Please fill in all required fields";
-            request.setAttribute("errorMessage", errorMessage);
-            RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/RegisterView.jsp");
-            rq.forward(request, response);
-            return;
+        try {
+            password = PasswordEncryption.getSaltedHash(request.getParameter("password"));
+            System.out.println(password);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
 //
         if (!insertUser(userLogin, userName, password, email)) {
-
             String message = "failed";
             RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/RegisterView.jsp");
             request.setAttribute("errorMessage", message);

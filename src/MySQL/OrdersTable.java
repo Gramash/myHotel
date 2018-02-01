@@ -47,6 +47,7 @@ public class OrdersTable {
             return false;
         }
         try (Connection conn = ConnectionUtils.getConnection()) {
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(INSERT_ORDER);
             int k = 1;
             prstm.setInt(k++, userId);
@@ -58,7 +59,7 @@ public class OrdersTable {
                 ApplicationsTable.closeApplication(appId);
             }
             ProductTable.setTakenOrFree(productId, 1);
-
+            conn.commit();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

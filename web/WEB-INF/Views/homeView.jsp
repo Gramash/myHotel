@@ -66,8 +66,19 @@
             opacity: 1;
         }
 
-        input[type=text], select, textarea {
+        input[type=text], textarea {
             width: 100%; /* Full width */
+            padding: 12px; /* Some padding */
+            border: 1px solid #ccc; /* Gray border */
+            border-radius: 4px; /* Rounded borders */
+            box-sizing: border-box; /* Make sure that padding and width stays in place */
+            margin-top: 6px; /* Add a top margin */
+            margin-bottom: 16px; /* Bottom margin */
+            resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
+        }
+        select {
+
+            width: 50%; /* Full width */
             padding: 12px; /* Some padding */
             border: 1px solid #ccc; /* Gray border */
             border-radius: 4px; /* Rounded borders */
@@ -160,11 +171,16 @@
                     <div class="modal-body">
                         <p>Please fill fields according to your preferences</p>
                         <label>Rooms</label>
+                        <br>
                         <select name="sleeps" required>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                         </select>
+                        <br>
+                        <br>
+                        <label>Apartment class</label>
+                        <br>
                         <select name="class" required>
                             <option value="A">A</option>
                             <option value="B">B</option>

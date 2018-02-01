@@ -1,6 +1,7 @@
 package MySQL;
 
 import JavaBeans.UserAccount;
+import Utils.PasswordEncryption;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,24 +11,42 @@ import java.sql.SQLException;
 public class UserTable {
 
 
-    private static final String FIND_BY_LOGIN_AND_PASS = "SELECT * FROM users WHERE login = ? AND password =?";
-    private static final String FIND_BY_LOGIN = "SELECT * FROM users WHERE email = ? ";
+    private static final String FIND_BY_LOGIN_AND_PASS = "SELECT * FROM users WHERE login = ? ";
+    private static final String FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ? ";
     private static final String INSERT_USER = "INSERT INTO users VALUES (default,?,?,?,?, default)";
-    private static final String FIND_BY_ID = "SELECT * FROM users where user_id= ?";
+    private static final String FIND_BY_ID = "SELECT * FROM users WHERE user_id= ?";
+    private static final String GET_PASS_BY_LOGIN = "SELECT password FROM users WHERE login =?";
+
 
     public static UserAccount findByLogin(String login, String password) {
+        if (!PasswordEncryption.check(password, getPassByLogin(login))) {
+            return null;
+        }
         try (Connection conn = ConnectionUtils.getConnection()) {
             PreparedStatement prstm = conn.prepareStatement(FIND_BY_LOGIN_AND_PASS);
             int k = 1;
-            prstm.setString(k++, login);
-            prstm.setString(k, password);
+            prstm.setString(k, login);
             ResultSet rs = prstm.executeQuery();
             UserAccount user = getUserAccount(rs);
             if (user != null) return user;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static String getPassByLogin(String login) {
+        try (Connection conn = ConnectionUtils.getConnection()) {
+            PreparedStatement prstm = conn.prepareStatement(GET_PASS_BY_LOGIN);
+            int k = 1;
+            prstm.setString(k, login);
+            ResultSet rs = prstm.executeQuery();
+            rs.next();
+            return rs.getString("password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private static UserAccount getUserAccount(ResultSet rs) throws SQLException {
@@ -46,7 +65,7 @@ public class UserTable {
 
     public static UserAccount findByEmail(String login) {
         try (Connection conn = ConnectionUtils.getConnection()) {
-            PreparedStatement prstm = conn.prepareStatement(FIND_BY_LOGIN);
+            PreparedStatement prstm = conn.prepareStatement(FIND_BY_EMAIL);
             int k = 1;
             prstm.setString(k, login);
             ResultSet rs = prstm.executeQuery();
