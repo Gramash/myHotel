@@ -1,6 +1,7 @@
 package Servlets;
 
 
+import Utils.EmailUtils;
 import Utils.PasswordEncryption;
 
 import javax.servlet.RequestDispatcher;
@@ -54,6 +55,13 @@ public class RegisterServlet extends HomeServlet {
                 "Please enter your login and pass to proceed to Your personal cabinet";
         RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/loginView.jsp?message=" + message);
         request.setAttribute("welcomeMessage", message);
+        String emailMessage = "Hello " + userName + "! \nCongrats on becoming a part of our Family!\n" +
+                "Your login is: " + userLogin  +
+                "\nYour pass is: " + password +
+                "\n Looking forward to meet You at out Hotel! \n" +
+                "Best Regards,\n" +
+                "GG Hotel team.";
+         EmailUtils.send(email, "Welcome!", emailMessage);
         rq.include(request, response);
 
     }

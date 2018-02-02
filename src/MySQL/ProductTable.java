@@ -103,6 +103,7 @@ public class ProductTable {
             PreparedStatement prst = conn.prepareStatement(i == 0 ? MARK_AS_FREE : MARK_AS_TAKEN);
             prst.setInt(1, roomId);
             prst.executeUpdate();
+            conn.commit();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

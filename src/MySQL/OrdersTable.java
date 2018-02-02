@@ -30,7 +30,6 @@ public class OrdersTable {
             "OR checkOut <= curdate()";
     private static final String CONFIRM_ORDER = "UPDATE ORDERS SET paid = 1 WHERE product_id =? AND checkIn=? AND checkOut=?";
 
-    private static final String FIND_BY_ID = "select * form orders where roomNo=?";
 
     private static void updateBeforeQuery() {
         try (Connection conn = ConnectionUtils.getConnection()) {
@@ -46,8 +45,9 @@ public class OrdersTable {
         if (DateUtils.isBeforeToday(checkIn)) {
             return false;
         }
-        try (Connection conn = ConnectionUtils.getConnection()) {
-            conn.setAutoCommit(false);
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
             PreparedStatement prstm = conn.prepareStatement(INSERT_ORDER);
             int k = 1;
             prstm.setInt(k++, userId);
@@ -62,8 +62,11 @@ public class OrdersTable {
             conn.commit();
             return true;
         } catch (Exception e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
             return false;
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
     }
 

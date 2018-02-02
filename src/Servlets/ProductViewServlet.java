@@ -31,8 +31,6 @@ public class ProductViewServlet extends HttpServlet {
             order = "asc";
         }
         productList = ProductTable.extractAll(false, orderBy, order);
-        System.out.println("orderBy " + orderBy + " order " + order);
-        System.out.println(productList);
         request.setAttribute("productList", productList);
         System.out.println("doGet");
         RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/ProductView.jsp");
