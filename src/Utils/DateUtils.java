@@ -11,13 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
-
-    public static void main(String[] args) throws ParseException {
-        String str = "2018-01-26";
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = df.parse(str);
-    }
-
+    
 
     public static String formatDate(String date, String initDateFormat, String endDateFormat) {
 

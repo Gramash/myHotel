@@ -68,11 +68,5 @@ public class PasswordEncryption {
         }
         return "";
     }
-
-    public static void main(String[] args) throws Exception {
-        String str = getSaltedHash("pass");
-        System.out.println(str);
-        System.out.println(check("pass", str));
-    }
 }
 
