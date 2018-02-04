@@ -1,9 +1,5 @@
 package Utils;
 
-import JavaBeans.UserAccount;
-import config.SecurityConfig;
-import sun.util.calendar.LocalGregorianCalendar;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,14 +7,19 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
-    
+
+    public static void main(String[] args) {
+        DateUtils.datesOverlap("","2008-01-03",
+                "2008-01-03", "2008-01-05");
+    }
+
 
     public static String formatDate(String date, String initDateFormat, String endDateFormat) {
 
         Date initDate = null;
         try {
             initDate = new SimpleDateFormat(initDateFormat).parse(date);
-        } catch (ParseException e) {
+        } catch (ParseException | NullPointerException e) {
             e.printStackTrace();
         }
         SimpleDateFormat formatter = new SimpleDateFormat(endDateFormat);
