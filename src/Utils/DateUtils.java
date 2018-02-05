@@ -8,11 +8,6 @@ import java.util.Date;
 
 public class DateUtils {
 
-    public static void main(String[] args) {
-        DateUtils.datesOverlap("","2008-01-03",
-                "2008-01-03", "2008-01-05");
-    }
-
 
     public static String formatDate(String date, String initDateFormat, String endDateFormat) {
 
@@ -26,21 +21,18 @@ public class DateUtils {
         return formatter.format(initDate);
     }
 
-    public static boolean datesOverlap(String startDateStr1, String endDateStr1, String startDateStr2, String endDateStr2) {
+    public static boolean datesOverlap(String startDateStr1, String endDateStr1, String startDateStr2, String endDateStr2) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date startDate1 = sdf.parse(startDateStr1);
-            Date startDate2 = sdf.parse(startDateStr2);
-            Date endDate1 = sdf.parse(endDateStr1);
-            Date endDate2 = sdf.parse(endDateStr2);
-            if (((startDate1.before(endDate2)) &&
-                    (startDate2.equals(endDate1) || (startDate2).before(endDate1)))) {
-                return true;
-            }
-        } catch (ParseException e) {
-            System.out.println("cant parse Dates");
-            e.printStackTrace();
+
+        Date startDate1 = sdf.parse(startDateStr1);
+        Date startDate2 = sdf.parse(startDateStr2);
+        Date endDate1 = sdf.parse(endDateStr1);
+        Date endDate2 = sdf.parse(endDateStr2);
+        if (((startDate1.before(endDate2)) &&
+                (startDate2.equals(endDate1) || (startDate2).before(endDate1)))) {
+            return true;
         }
+
         return false;
     }
 
@@ -65,15 +57,11 @@ public class DateUtils {
         return new java.sql.Date(date.getTime());
     }
 
-    public static boolean isBeforeToday(String dateStr) {
+    public static boolean isBeforeToday(String dateStr) throws ParseException {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
-        try {
-            date = df.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            System.out.println("cant parse date DateUtils#isBefore2day");
-        }
+        date = df.parse(dateStr);
+
         Calendar c = Calendar.getInstance();
 
 // set the calendar to start of today

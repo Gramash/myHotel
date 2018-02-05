@@ -23,8 +23,11 @@ public class SecurityUtils {
 
     // Проверить требует ли данный 'request' входа в систему или нет.
     public static boolean isSecurityPage(HttpServletRequest request) {
+        System.out.println("isSecurityPageMethod================>");
         String urlPattern = UrlPatternsUtils.getUrlPattern(request);
-
+        System.out.println("url pattern = " + urlPattern);
+        System.out.println("command = " + request.getParameter("command"));
+        urlPattern = request.getParameter("command");
         Set<String> roles = SecurityConfig.getAllRoles();
 
         for (String role : roles) {
@@ -39,7 +42,7 @@ public class SecurityUtils {
     // Check if request is made by user with appropriate role
     public static boolean hasPermission(HttpServletRequest request) {
         String urlPattern = UrlPatternsUtils.getUrlPattern(request);
-
+        urlPattern = request.getParameter("command");
         Set<String> allRoles = SecurityConfig.getAllRoles();
 
         for (String role : allRoles) {

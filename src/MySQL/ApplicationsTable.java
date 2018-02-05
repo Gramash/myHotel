@@ -4,6 +4,7 @@ import JavaBeans.Application;
 import Utils.DateUtils;
 
 import java.sql.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,11 +31,14 @@ public class ApplicationsTable {
         return random.nextInt(9999);
     }
 
-    public static boolean insertApplication(int userId, int sleeps, String clazz, String checkIn, String checkOut) {
+    public static boolean insertApplication(int userId, int sleeps, String clazz, String checkIn, String checkOut) throws ParseException {
         if (DateUtils.isBeforeToday(checkIn)) {
             return false;
         }
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(INSERT_APPLICATION);
             int k = 1;
             prstm.setString(k++, "#" + createApplId());
@@ -44,9 +48,13 @@ public class ApplicationsTable {
             prstm.setString(k++, checkIn);
             prstm.setString(k, checkOut);
             prstm.executeUpdate();
+            conn.commit();
             return true;
         } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return false;
     }
@@ -95,38 +103,58 @@ public class ApplicationsTable {
     }
 
     public static boolean closeApplication(String appId) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(CLOSE_APPLICATION);
             prstm.setString(1, appId);
             prstm.executeUpdate();
+            conn.commit();
             return true;
         } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
             System.out.println("cannot closeApplication");
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return false;
     }
 
     private static boolean removeOutdated() {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(REMOVE_OUTDATED);
             prstm.executeUpdate();
+            conn.commit();
             return true;
         } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
             System.out.println("failed to ApllicationsTable#removeOutdated");
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return false;
     }
 
     public static boolean cancelApplication(String appId) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
             PreparedStatement prstm = conn.prepareStatement(REMOVE_APP);
             prstm.setString(1, appId);
             prstm.executeUpdate();
+            conn.commit();
             return true;
         } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return false;
     }

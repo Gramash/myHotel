@@ -4,11 +4,13 @@ package MySQL;
 import JavaBeans.Order;
 import JavaBeans.UserAccount;
 import Utils.DateUtils;
+import com.mysql.jdbc.MysqlDataTruncation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,22 +34,30 @@ public class OrdersTable {
 
 
     private static void updateBeforeQuery() {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(UPDATE_BEFORE_QUERY);
             prstm.execute();
             ProductTable.setFree();
+            conn.commit();
         } catch (Exception e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
     }
 
-    public static boolean insertOrder(int userId, int productId, String checkIn, String checkOut, String appId) {
+    public static boolean insertOrder(int userId, int productId, String checkIn, String checkOut, String appId) throws ParseException {
         if (DateUtils.isBeforeToday(checkIn)) {
             return false;
         }
         Connection conn = null;
         try {
             conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(INSERT_ORDER);
             int k = 1;
             prstm.setInt(k++, userId);
@@ -58,16 +68,16 @@ public class OrdersTable {
             if (appId != null) {
                 ApplicationsTable.closeApplication(appId);
             }
-            ProductTable.setTakenOrFree(productId, 1);
             conn.commit();
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ConnectionUtils.rollback(conn);
             e.printStackTrace();
             return false;
         } finally {
             ConnectionUtils.closeCon(conn);
         }
+
     }
 
     public static List<Order> getOrderByUserId(int userId) {
@@ -107,7 +117,9 @@ public class OrdersTable {
         PreparedStatement getOrdersByUserId;
         ResultSet rs;
         java.sql.Date date = null;
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try  {
+            conn = ConnectionUtils.getConnection();
             orderList = new ArrayList<>();
             updateBeforeQuery();
             getOrdersByUserId = conn.prepareStatement(GET_ALL_ORDERS);
@@ -122,23 +134,33 @@ public class OrdersTable {
                         Double.parseDouble(rs.getString("price")), date, rs.getString("class"), user);
                 orderList.add(order);
             }
+            conn.commit();
         } catch (Exception e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return orderList;
     }
 
     public static boolean confirmOrder(int productId, java.sql.Date checkIn, java.sql.Date checkOut) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
             PreparedStatement prstm = conn.prepareStatement(CONFIRM_ORDER);
             int k = 1;
             prstm.setInt(k++, productId);
             prstm.setDate(k++, checkIn);
             prstm.setDate(k, checkOut);
             prstm.executeUpdate();
+            conn.commit();
             return true;
         } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return false;
     }

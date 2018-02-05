@@ -44,6 +44,7 @@ public class UrlPatternsUtils {
 
         boolean has = hasUrlPattern(servletContext, urlPattern);
         if (has) {
+            System.out.println("URL PATTER = " + urlPattern);
             return urlPattern;
         }
         return "/";

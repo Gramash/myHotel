@@ -67,7 +67,7 @@
 
 <body>
 
-<jsp:include page="../../_menu.jsp"></jsp:include>
+<jsp:include page="/_menu.jsp"></jsp:include>
 
 <!-- Sidebar -->
 
@@ -83,8 +83,9 @@
         <td>Payment due date</td>
     </tr>
     <c:forEach items="${orderList}" var="order">
-        <form method="post" action="${pageContext.request.contextPath}/personalCabinet">
+        <form method="post" action="/controller">
             <tr>
+                <input type="hidden" name="command" value="confirmOrder">
                 <td>
                     <input name="prodId" value="${order.roomNo}" type="hidden">
                         ${order.roomNo}
@@ -126,7 +127,8 @@
         <td>Cancel application</td>
     </tr>
     <c:forEach items="${applList}" var="appl">
-        <form method="post" action="${pageContext.request.contextPath}/cancelApp">
+        <form method="post" action="/controller">
+            <input type="hidden" name="command" value="cancelApp">
             <tr>
                 <td>
                     <input name="appId" type="hidden" value="${appl.applId}">
@@ -137,8 +139,7 @@
                 <td>${appl.checkIn}</td>
                 <td>${appl.checkOut}</td>
                 <td align="center">
-                    <input type="submit" class="btn btn-danger" value="Cancel"
-                           formaction="${pageContext.request.contextPath}/cancelApp">
+                    <input type="submit" class="btn btn-danger" value="Cancel">
                 </td>
             </tr>
         </form>
@@ -163,9 +164,11 @@
     </tr>
 
     <c:forEach items="${offerList}" var="offer">
-        <form method="post" action="${pageContext.request.contextPath}/productView">
+        <form method="post" action="/controller">
             <tr>
                 <td>
+                    <input type="hidden" name="reqFrom" value="${reqFrom}">
+                    <input type="hidden" name="command" value="bookARoom">
                     <input name="appId" type="hidden" value="${offer.applId}">
                         ${offer.applId}
                 </td>

@@ -75,11 +75,12 @@
 </head>
 <body>
 
-<jsp:include page="../../_menu.jsp"/>
+<jsp:include page="/_menu.jsp"/>
 
 <p align="center" style="color: red;">${errorMessage}</p>
 <div class="container">
-    <form method="POST" action="${pageContext.request.contextPath}/register">
+    <form method="POST" action="/controller">
+        <input type="hidden" name="command" value="register">
         <table align="center">
             <tr>
                 <td>
@@ -110,7 +111,7 @@
             <tr>
                 <td>
                     <input style="color: mintcream" type="submit" value="Submit"/>
-                    <a style="color:mintcream" href="${pageContext.request.contextPath}/">Cancel</a>
+                    <a style="color:mintcream" href="/homeView.jsp">Cancel</a>
                 </td>
             </tr>
         </table>

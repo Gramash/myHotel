@@ -14,11 +14,11 @@
 </head>
 <body>
 
-<jsp:include page="../../_menu.jsp"></jsp:include>
+<jsp:include page="../_menu.jsp"></jsp:include>
 
 <br/><br/>
 
-<h3 style="color:red;">Access Denied!</h3>
+<h3 style="color:red;">Oops! Something went wrong</h3>
 
 </body>
 </html>

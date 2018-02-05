@@ -1,35 +1,19 @@
-package Servlets;
+package Commands.generalCommands;
 
-
+import Commands.Command;
 import Utils.EmailUtils;
 import Utils.PasswordEncryption;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static MySQL.UserTable.insertUser;
 
-@WebServlet("/register")
-public class RegisterServlet extends HomeServlet {
-
+public class RegisterCommand extends Command {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        RequestDispatcher dispatcher //
-                = request.getRequestDispatcher("/WEB-INF/Views/RegisterView.jsp");
-
-        dispatcher.forward(request, response);
-    }
-
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         String userLogin = request.getParameter("userLogin");
         String password = null;
@@ -42,27 +26,24 @@ public class RegisterServlet extends HomeServlet {
             e.printStackTrace();
         }
 
-
+        String forward = "/Views/RegisterView";
 //
         if (!insertUser(userLogin, userName, password, email)) {
             String message = "failed";
-            RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/RegisterView.jsp");
             request.setAttribute("errorMessage", message);
-            rq.include(request, response);
-            return;
+            return forward;
         }
+        forward = "/Views/loginView.jsp";
         String message = "Congrats! You have successfully signed up. Welcome to our family!\n" +
                 "Please enter your login and pass to proceed to Your personal cabinet";
-        RequestDispatcher rq = request.getRequestDispatcher("/WEB-INF/Views/loginView.jsp?message=" + message);
         request.setAttribute("welcomeMessage", message);
         String emailMessage = "Hello " + userName + "! \nCongrats on becoming a part of our Family!\n" +
-                "Your login is: " + userLogin  +
+                "Your login is: " + userLogin +
                 "\nYour pass is: " + password +
                 "\n Looking forward to meet You at out Hotel! \n" +
                 "Best Regards,\n" +
                 "GG Hotel team.";
-         EmailUtils.send(email, "Welcome!", emailMessage);
-        rq.include(request, response);
-
+        EmailUtils.send(email, "Welcome!", emailMessage);
+        return forward;
     }
 }

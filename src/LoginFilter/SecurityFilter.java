@@ -6,7 +6,6 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import JavaBeans.UserAccount;
 import Utils.AppUtils;
@@ -27,11 +26,11 @@ public class SecurityFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
 
         String servletPath = request.getServletPath();
-
+        System.out.println("servletPath = " + servletPath);
         // User info is saved to session (after he successfully logged in)
         UserAccount loginedUser = AppUtils.getLoginedUser(request.getSession());
 
-        if (servletPath.equals("/login")) {
+        if (servletPath.equals("/Views/loginView.jsp")) {
             chain.doFilter(request, response);
             return;
         }
@@ -52,7 +51,7 @@ public class SecurityFilter implements Filter {
 
             //if user is not logged in yet ==> redirect to login.jsp
             if (loginedUser == null) {
-                response.sendRedirect(request.getContextPath() + "/login");
+                response.sendRedirect(request.getContextPath() + "/Views/loginView.jsp");
                 return;
             }
 
@@ -61,7 +60,7 @@ public class SecurityFilter implements Filter {
             if (!hasPermission) {
 
                 RequestDispatcher dispatcher //
-                        = request.getRequestDispatcher("/WEB-INF/Views/accessDeniedView.jsp");
+                        = request.getRequestDispatcher("/Views/accessDeniedView.jsp");
 
                 dispatcher.forward(request, response);
                 return;

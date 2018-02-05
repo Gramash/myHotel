@@ -39,13 +39,14 @@
 </head>
 <body>
 
-<jsp:include page="../../_menu.jsp"></jsp:include>
+<jsp:include page="../_menu.jsp"></jsp:include>
 
 
 <p style="color: red;">${errorMessage}</p>
 <p style="color: blue;">${welcomeMessage}</p>
 <div class="container">
-    <form method="POST" action="${pageContext.request.contextPath}/login">
+    <form method="POST" action="/controller">
+        <input type="hidden" name="command" value="login"/>
         <table border="0" align="center">
             <tr>
                 <td>

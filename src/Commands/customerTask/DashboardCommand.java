@@ -1,28 +1,20 @@
-package Servlets;
+package Commands.customerTask;
 
-import JavaBeans.Application;
-import JavaBeans.UserAccount;
+import Commands.Command;
 import MySQL.ApplicationResponseTable;
 import MySQL.ApplicationsTable;
 import MySQL.OrdersTable;
 import Utils.AppUtils;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
-@WebServlet("/personalCabinet")
-public class PersonalCabinet extends HttpServlet {
-
+public class DashboardCommand extends Command {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public String execute(HttpServletRequest req, HttpServletResponse resp)  {
+        req.setAttribute("reqFrom", req.getParameter("command"));
+        String forward = "/Views/dashboard.jsp";
         try {
             System.out.println("PersonalCabinet#doGet");
             List orderList = OrdersTable.getOrderByUserId(AppUtils.getLoginedUser(req.getSession()).getUserID());
@@ -43,21 +35,8 @@ public class PersonalCabinet extends HttpServlet {
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
-            RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
-            rq.forward(req, resp);
+            return forward;
         }
-        RequestDispatcher rq = req.getRequestDispatcher("/WEB-INF/Views/personalCabinet.jsp");
-        rq.forward(req, resp);
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int productId = Integer.parseInt(req.getParameter("prodId"));
-        Date checkIn = Date.valueOf(req.getParameter("checkIn"));
-        Date checkOut = Date.valueOf(req.getParameter("checkOut"));
-        System.out.println(productId + " " + checkIn + " " + checkOut);
-        OrdersTable.confirmOrder(productId, checkIn, checkOut);
-        doGet(req, resp);
+        return forward;
     }
 }

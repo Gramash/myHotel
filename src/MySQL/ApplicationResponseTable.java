@@ -39,17 +39,23 @@ public class ApplicationResponseTable {
     }
 
     public static boolean insertResponse(String applicId, int userId, int roomNo) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
             PreparedStatement prstm = conn.prepareStatement(INSERT_RESPONSE);
             int k = 1;
             prstm.setString(k++, applicId);
             prstm.setInt(k++, userId);
             prstm.setInt(k, roomNo);
             prstm.executeUpdate();
+            conn.commit();
             return true;
         } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
             System.out.println("cant insert Response");
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return false;
     }

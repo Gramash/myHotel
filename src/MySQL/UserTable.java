@@ -22,29 +22,43 @@ public class UserTable {
         if (!PasswordEncryption.check(password, getPassByLogin(login))) {
             return null;
         }
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(FIND_BY_LOGIN_AND_PASS);
             int k = 1;
             prstm.setString(k, login);
             ResultSet rs = prstm.executeQuery();
             UserAccount user = getUserAccount(rs);
+            conn.commit();
             if (user != null) return user;
         } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return null;
     }
 
     private static String getPassByLogin(String login) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(GET_PASS_BY_LOGIN);
             int k = 1;
             prstm.setString(k, login);
             ResultSet rs = prstm.executeQuery();
             rs.next();
+            conn.commit();
             return rs.getString("password");
         } catch (Exception e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return "";
     }
@@ -64,21 +78,30 @@ public class UserTable {
     }
 
     public static UserAccount findByEmail(String login) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(FIND_BY_EMAIL);
             int k = 1;
             prstm.setString(k, login);
             ResultSet rs = prstm.executeQuery();
             UserAccount user = getUserAccount(rs);
-            if (user != null) return user;
+            conn.commit();
+            return user;
         } catch (Exception e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return null;
     }
 
     public static boolean insertUser(String login, String name, String password, String email) {
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = ConnectionUtils.getConnection();
             PreparedStatement prstm = conn.prepareStatement(INSERT_USER);
             int k = 1;
             prstm.setString(k++, login);
@@ -86,10 +109,14 @@ public class UserTable {
             prstm.setString(k++, password);
             prstm.setString(k, email);
             prstm.execute();
+            conn.commit();
             return true;
         } catch (Exception e) {
+            ConnectionUtils.rollback(conn);
             e.printStackTrace();
             return false;
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
     }
 

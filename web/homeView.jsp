@@ -114,7 +114,7 @@
 </head>
 <body>
 
-<jsp:include page="../../_menu.jsp"></jsp:include>
+<jsp:include page="_menu.jsp"></jsp:include>
 
 <div class="container">
     <h3>${message}</h3>
@@ -163,7 +163,7 @@
     </button>
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
-            <form method="POST" action="${pageContext.request.contextPath}/applicationForm" }>
+            <form method="POST" action="controller" >
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Application Form</h4>
@@ -172,6 +172,7 @@
                         <p>Please fill fields according to your preferences</p>
                         <label>Rooms</label>
                         <br>
+                        <input type="hidden" name="command" value="makeApplication">
                         <select name="sleeps" required>
                             <option value="1">1</option>
                             <option value="2">2</option>

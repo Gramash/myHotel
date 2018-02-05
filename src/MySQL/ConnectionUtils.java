@@ -15,24 +15,30 @@ public class ConnectionUtils {
     private static final String URL = "jdbc:mysql://localhost:3306/myhotel" +
             "?user=root&password=gibsonlp";
 
-    public static Connection getConnection() throws SQLException {
-        DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-        return DriverManager.getConnection(URL);
-    }
+//    public static Connection getConnection() throws SQLException {
+//        DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+//        return DriverManager.getConnection(URL);
+//    }
 
     public static void closeCon(Connection conn) {
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if(conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println("CANT CLOSE CONNECTION");
+                e.printStackTrace();
+            }
         }
     }
 
     public static void rollback(Connection conn) {
-        try {
-            conn.rollback();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException e) {
+                System.out.println("cant rollback");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -49,7 +55,7 @@ public class ConnectionUtils {
     }
     private DataSource ds;
 
-    public static Connection getDSConnection(){
+    public static Connection getConnection(){
         DataSource ds = null;
         Connection conn = null;
         try {

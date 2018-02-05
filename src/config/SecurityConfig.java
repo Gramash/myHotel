@@ -28,17 +28,17 @@ public class SecurityConfig {
         // Congig for CUSTOMER role
         List<String> urlPatternsCustomer = new ArrayList<String>();
 
-        urlPatternsCustomer.add("/userInfo");
-        urlPatternsCustomer.add("/personalCabinet");
+        urlPatternsCustomer.add("userInfo");
+        urlPatternsCustomer.add("dashboard");
 
         mapConfig.put(ROLE_CUSTOMER, urlPatternsCustomer);
 
         // Config for MANAGER role
         List<String> urlPatternsManager = new ArrayList<String>();
 
-        urlPatternsManager.add("/userInfo");
-        urlPatternsManager.add("/managerTask");
-        urlPatternsManager.add("/personalCabinet");
+        urlPatternsManager.add("userInfo");
+        urlPatternsManager.add("managerTask");
+        urlPatternsManager.add("dashboard");
 
         mapConfig.put(ROLE_MANAGER, urlPatternsManager);
     }

@@ -28,7 +28,7 @@ public class TestDateUtils {
     }
 
     @Test
-    public void TestDatesOverlap() {
+    public void TestDatesOverlap() throws ParseException {
         assertFalse(DateUtils.datesOverlap("2008-01-01", "2008-01-03",
                 "2008-01-04", "2008-01-05"));
         assertTrue(DateUtils.datesOverlap("2008-01-01", "2008-01-03",
@@ -39,7 +39,7 @@ public class TestDateUtils {
     public ExpectedException exception = ExpectedException.none();
 
     @Test (expected = NullPointerException.class)
-    public void testDatesOverlap() {
+    public void testDatesOverlap() throws ParseException {
         DateUtils.datesOverlap(null, "2008-01-03",
                 "2008-01-03", "2008-01-05");
         DateUtils.datesOverlap("", "2008-01-03",

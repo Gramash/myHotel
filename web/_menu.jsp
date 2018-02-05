@@ -23,18 +23,18 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/">iHotel</a>
+            <a class="navbar-brand" href="/homeView.jsp">iHotel</a>
         </div>
         <ul class="nav navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/personalCabinet">Dashboard</a></li>
+            <li><a href="/controller?command=dashboard">Dashboard</a></li>
             <li><c:if test="${loginedUser!=null && loginedUser.accessLevel.equals(role)}">
-                <a href="${pageContext.request.contextPath}/managerTask">Manager Task</a>
+                <a href="/controller?command=managerTask">Manager Task</a>
             </c:if></li>
-            <li><a href="${pageContext.request.contextPath}/productView">Offers</a></li>
+            <li><a href="/controller?command=productView">Offers</a></li>
             <li><a href="${pageContext.request.contextPath}/userInfo">My Account</a></li>
             <li>
                 <c:if test="${loginedUser==null}">
-                    <a href="${pageContext.request.contextPath}/register">Join</a>
+                    <a href="/Views/RegisterView.jsp">Join</a>
                 </c:if>
             </li>
         </ul>
@@ -42,13 +42,13 @@
             <li><a>[ ${loginedUser.userLogin} ]</a>
             <li>
                 <c:if test="${loginedUser==null}">
-                    <a href="${pageContext.request.contextPath}/login"> <span
+                    <a href="/Views/loginView.jsp"> <span
                             class="glyphicon glyphicon-log-in"></span> Sign In</a>
                 </c:if>
             </li>
             <li>
                 <c:if test="${loginedUser!=null}">
-                    <a href="${pageContext.request.contextPath}/logout"><span
+                    <a href="controller?command=logout"><span
                             class="glyphicon glyphicon-user"></span> Sign Out</a>
                 </c:if>
             </li>

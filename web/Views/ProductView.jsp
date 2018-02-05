@@ -192,10 +192,12 @@
 
 </head>
 <body>
-<jsp:include page="../../_menu.jsp"/>
-<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%; padding-left: 15px; z-index: -1;">
+<jsp:include page="../_menu.jsp"/>
+
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%; padding-left: 15px;">
     <h3 class="w3-bar-item">Filter results</h3>
-    <form method="post" action="${pageContext.request.contextPath}/filterDB">
+    <form method="post" action="controller">
+        <input type="hidden" name="command" value="productView">
         <label> rooms<br>
             <select name="sleeps">
                 <option value="1">1</option>
@@ -220,9 +222,12 @@
         <input type="submit" value="Filter" class="input1"/>
     </form>
 </div>
+
 <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%; right:0; padding-left: 15px">
+
     <h3 class="w3-bar-item">Sort</h3>
-    <form method="get" action="productView">
+    <form method="get" action="controller">
+        <input type="hidden" name="command" value="productView"/>
         <label> Order
             <p>
                 <input class="w3-radio" type="radio" name="order" value="asc">
@@ -259,8 +264,12 @@
         <th>Book It!</th>
     </tr>
     <c:forEach items="${productList}" var="product" varStatus="loop">
-        <form method="post" action="${pageContext.request.contextPath}/productView">
+        <form method="post" action="controller">
+
             <tr>
+                <input type="hidden" name="command" value="bookARoom">
+                <input type="hidden" name="reqFrom" value="${reqFrom}">
+
                 <input style="color: white" name="prodId" type="hidden" value="${product.roomNo}">
                 <td>
                     <img class="img" id="myImg${product.roomNo}" src="${product.image}" width="180" height="125"
