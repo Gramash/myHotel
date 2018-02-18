@@ -1,9 +1,6 @@
-package JavaBeans;
+package MySQL.JavaBeans;
 
 import config.SecurityConfig;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserAccount {
     private int userID;

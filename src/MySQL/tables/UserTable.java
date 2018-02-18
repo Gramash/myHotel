@@ -1,6 +1,8 @@
-package MySQL;
+package MySQL.tables;
 
-import JavaBeans.UserAccount;
+import MySQL.ConnectionUtils;
+import MySQL.Fields;
+import MySQL.JavaBeans.UserAccount;
 import Utils.PasswordEncryption;
 
 import java.sql.Connection;
@@ -9,8 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserTable {
-
-
     private static final String FIND_BY_LOGIN_AND_PASS = "SELECT * FROM users WHERE login = ? ";
     private static final String FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ? ";
     private static final String INSERT_USER = "INSERT INTO users VALUES (default,?,?,?,?, default)";
@@ -53,8 +53,8 @@ public class UserTable {
             ResultSet rs = prstm.executeQuery();
             rs.next();
             conn.commit();
-            return rs.getString("password");
-        } catch (Exception e) {
+            return rs.getString(Fields.PASSWORD);
+        } catch (SQLException e) {
             ConnectionUtils.rollback(conn);
             e.printStackTrace();
         } finally {
@@ -66,12 +66,12 @@ public class UserTable {
     private static UserAccount getUserAccount(ResultSet rs) throws SQLException {
         if (rs.next()) {
             UserAccount user = new UserAccount();
-            user.setUserID(Integer.parseInt(rs.getString("user_id")));
-            user.setUserLogin(rs.getString("login"));
-            user.setPassword(rs.getString("password"));
-            user.setUserName(rs.getString("name"));
-            user.setAccessLevel(rs.getString("role"));
-            user.setEmail(rs.getString("email"));
+            user.setUserID(Integer.parseInt(rs.getString(Fields.USER_ID)));
+            user.setUserLogin(rs.getString(Fields.LOGIN));
+            user.setPassword(rs.getString(Fields.PASSWORD));
+            user.setUserName(rs.getString(Fields.NAME));
+            user.setAccessLevel(rs.getString(Fields.ROLE));
+            user.setEmail(rs.getString(Fields.EMAIL));
             return user;
         }
         return null;
@@ -122,7 +122,10 @@ public class UserTable {
 
     public static UserAccount findById(int userId) {
         UserAccount user = null;
-        try (Connection conn = ConnectionUtils.getConnection()) {
+        Connection conn = null;
+        try  {
+            conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(FIND_BY_ID);
             int k = 1;
             prstm.setInt(k, userId);
@@ -130,12 +133,15 @@ public class UserTable {
             rs.next();
             user = new UserAccount();
             user.setUserID(userId);
-            user.setEmail(rs.getString("email"));
-            user.setUserName(rs.getString("name"));
-            user.setUserLogin("login");
+            user.setEmail(rs.getString(Fields.EMAIL));
+            user.setUserName(rs.getString(Fields.NAME));
+            user.setUserLogin(Fields.LOGIN);
+            conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("cant find user By Id");
+        } finally {
+            ConnectionUtils.closeCon(conn);
         }
         return user;
     }

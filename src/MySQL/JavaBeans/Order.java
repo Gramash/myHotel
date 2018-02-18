@@ -1,4 +1,4 @@
-package JavaBeans;
+package MySQL.JavaBeans;
 
 
 import java.sql.Date;
@@ -11,6 +11,15 @@ public class Order {
     private double price;
     private Date paid;
     private String clazz;
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getClazz() {
         return clazz;

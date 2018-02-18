@@ -1,7 +1,10 @@
 package Commands.customerTask;
 
+import Commands.Attributes;
 import Commands.Command;
-import MySQL.OrdersTable;
+import Commands.Paths;
+import MySQL.Fields;
+import MySQL.tables.OrdersTable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +17,11 @@ public class ConfirmOrder extends Command {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
-        int productId = Integer.parseInt(req.getParameter("prodId"));
-        Date checkIn = Date.valueOf(req.getParameter("checkIn"));
-        Date checkOut = Date.valueOf(req.getParameter("checkOut"));
+        int productId = Integer.parseInt(req.getParameter(Attributes.PRODUCT_ID));
+        Date checkIn = Date.valueOf(req.getParameter(Fields.CHECK_IN));
+        Date checkOut = Date.valueOf(req.getParameter(Fields.CHECK_OUT));
         System.out.println(productId + " " + checkIn + " " + checkOut);
         OrdersTable.confirmOrder(productId, checkIn, checkOut);
-        return "controller?command=dashboard";
+        return Paths.COMMAND_DASHBOARD;
     }
 }

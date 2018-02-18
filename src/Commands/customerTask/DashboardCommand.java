@@ -1,9 +1,12 @@
 package Commands.customerTask;
 
+import Commands.Attributes;
 import Commands.Command;
-import MySQL.ApplicationResponseTable;
-import MySQL.ApplicationsTable;
-import MySQL.OrdersTable;
+import Commands.Messages;
+import Commands.Paths;
+import MySQL.tables.ApplicationResponseTable;
+import MySQL.tables.ApplicationsTable;
+import MySQL.tables.OrdersTable;
 import Utils.AppUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,25 +16,24 @@ import java.util.List;
 public class DashboardCommand extends Command {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp)  {
-        req.setAttribute("reqFrom", req.getParameter("command"));
-        String forward = "/Views/dashboard.jsp";
+        req.setAttribute(Attributes.REQUEST_FROM, req.getParameter(Attributes.COMMAND));
+        String forward = Paths.JSP_DASHBOARD;
         try {
-            System.out.println("PersonalCabinet#doGet");
             List orderList = OrdersTable.getOrderByUserId(AppUtils.getLoginedUser(req.getSession()).getUserID());
             List applList = ApplicationsTable.extractForUser(AppUtils.getLoginedUser(req.getSession()).getUserID());
             List offerList = ApplicationResponseTable.getResponseForUser(AppUtils.getLoginedUser(req.getSession()).getUserID());
             System.out.println(offerList);
-            req.setAttribute("orderList", orderList);
-            req.setAttribute("applList", applList);
-            req.setAttribute("offerList", offerList);
+            req.setAttribute(Attributes.ORDER_LIST, orderList);
+            req.setAttribute(Attributes.APPLICATION_LIST, applList);
+            req.setAttribute(Attributes.OFFER_LIST, offerList);
             if (orderList.size() == 0) {
-                req.setAttribute("message", "You have no pending orders yet" + "\n Proceed to products to make an order");
+                req.setAttribute(Attributes.MESSAGE, Messages.NO_PENDING_ORDERS);
             }
             if (applList.size() == 0) {
-                req.setAttribute("applMessage", "You have no applications yet");
+                req.setAttribute(Attributes.APPLICATION_MESSAGE, Messages.NO_PENDING_APPLICATIONS);
             }
             if (offerList.size() == 0) {
-                req.setAttribute("offerMessage", "You have no offers for your applications");
+                req.setAttribute(Attributes.OFFER_MESSAGE, Messages.NO_OFFERS_FOR_APPLICATION);
             }
         } catch (NullPointerException e) {
             e.printStackTrace();

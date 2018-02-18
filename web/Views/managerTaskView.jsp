@@ -89,7 +89,7 @@
 
 <jsp:include page="/_menu.jsp"></jsp:include>
 
-<h3 style="color:mintcream;"> Greetings ${loginedUser.userName}!</h3>
+<h3 style="color:mintcream;">Greetings ${loginedUser.userName}!</h3>
 <h4 style="color:mintcream;">Welcome to Your workplace. Have a nice day!</h4>
 <table name="orders" style=" background-color: mintcream ">
     <tr>
@@ -120,6 +120,36 @@
             </td>
         </tr>
     </c:forEach>
+</table>
+<br>
+<hr>
+
+<h3 style="color: mintcream; ">Total price for userId</h3>
+<table id="ordersPrice" style="background-color: mintcream; text-decoration: none">
+    <tr>
+        <th>userId</th>
+        <th>userName</th>
+        <th>email</th>
+        <th>Sum of all orders</th>
+
+    </tr>
+    <c:forEach items="${orderPriceList}" var="order" varStatus="loop">
+        <tr>
+            <td>
+                    ${order.user.userID}
+            </td>
+            <td>
+                    ${order.user.userName}
+            </td>
+            <td>
+                    ${order.user.email}
+            </td>
+            <td>
+                    ${order.price}
+            </td>
+        </tr>
+    </c:forEach>
+
 </table>
 <br>
 <hr>
@@ -252,6 +282,9 @@
 <br>
 <hr>
 <p>Suggestions for application# ${appId}</p>
+<p style="color: mintcream;">${message}</p>
+
+
 <table id="suggestions list" style="background-color: mintcream">
     <tr>
         <th>image</th>
@@ -291,7 +324,12 @@
             </form>
         </tr>
     </c:forEach>
-
 </table>
+
+<br>
+<hr>
+
+
+
 </body>
 </html>

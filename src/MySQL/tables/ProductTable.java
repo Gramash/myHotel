@@ -1,8 +1,9 @@
-package MySQL;
+package MySQL.tables;
 
-import JavaBeans.Product;
+import MySQL.ConnectionUtils;
+import MySQL.Fields;
+import MySQL.JavaBeans.Product;
 import Utils.DateUtils;
-import com.sun.org.apache.xpath.internal.SourceTree;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -22,7 +23,6 @@ public class ProductTable {
             "LEFT JOIN orders ON products.roomNo = orders.product_id ";
     private static final String MARK_AS_TAKEN = "UPDATE products SET isTaken=1 where roomNo = ?";
     private static final String MARK_AS_FREE = "UPDATE products SET isTaken=0 where roomNo = ?";
-    private static final String CHANGE_AVAILABILITY = "UPDATE products SET available=? WHERE roomNo =?";
     private static final String UPDATE_PROD = "UPDATE products SET sleeps=?, price=?, available=?, class=? WHERE roomNo = ? ";
 
     public static List<Product> extractAll(boolean manager, String orderBy, String order) {
@@ -34,17 +34,17 @@ public class ProductTable {
             PreparedStatement prst = conn.prepareStatement(FIND_ALL_PRODUCTS + orderBy + " " + order);
             ResultSet rs = prst.executeQuery();
             while (rs.next()) {
-                if (!manager && !rs.getBoolean("available")) {
+                if (!manager && !rs.getBoolean(Fields.AVAILABLE)) {
                     continue;
                 }
                 Product product = new Product();
-                product.setClazz(rs.getString("class"));
-                product.setAvailable(rs.getBoolean("available"));
-                product.setRoomNo(Integer.parseInt(rs.getString("roomNo")));
-                product.setPrice(Double.parseDouble(rs.getString("price")));
-                product.setSleeps(Integer.parseInt(rs.getString("sleeps")));
-                product.setImage((rs.getString("image")));
-                product.setTaken(rs.getBoolean("isTaken"));
+                product.setClazz(rs.getString(Fields.CLASS));
+                product.setAvailable(rs.getBoolean(Fields.AVAILABLE));
+                product.setRoomNo(Integer.parseInt(rs.getString(Fields.ROOM_NO)));
+                product.setPrice(Double.parseDouble(rs.getString(Fields.PRICE)));
+                product.setSleeps(Integer.parseInt(rs.getString(Fields.SLEEPS)));
+                product.setImage((rs.getString(Fields.IMAGE)));
+                product.setTaken(rs.getBoolean(Fields.IS_TAKEN));
                 productList.add(product);
                 conn.commit();
             }
@@ -70,14 +70,14 @@ public class ProductTable {
             preparedStatement.setString(k, clazz);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                String startDate1 = rs.getString("checkIn");
-                String endDate1 = rs.getString("checkOut");
+                String startDate1 = rs.getString(Fields.CHECK_IN);
+                String endDate1 = rs.getString(Fields.CHECK_OUT);
                 if ((startDate1 == null || endDate1 == null) || !DateUtils.datesOverlap(startDate1, endDate1, checkIn, checkOut)) {
                     Product product = new Product();
-                    product.setClazz(rs.getString("class"));
-                    product.setRoomNo(rs.getInt("roomNo"));
-                    product.setImage(rs.getString("image"));
-                    product.setSleeps(rs.getInt("sleeps"));
+                    product.setClazz(rs.getString(Fields.CLASS));
+                    product.setRoomNo(rs.getInt(Fields.ROOM_NO));
+                    product.setImage(rs.getString(Fields.IMAGE));
+                    product.setSleeps(rs.getInt(Fields.SLEEPS));
                     product.setPrice(Double.parseDouble(rs.getString("price")));
                     productList.add(product);
                 }
@@ -100,8 +100,8 @@ public class ProductTable {
             prst.setInt(1, id);
             ResultSet rs = prst.executeQuery();
             while (rs.next()) {
-                String checkIn = rs.getString("checkIn");
-                String checkOut = rs.getString("checkOut");
+                String checkIn = rs.getString(Fields.CHECK_IN);
+                String checkOut = rs.getString(Fields.CHECK_OUT);
                 if (checkIn == null || checkOut == null) {
                     return false;
                 }
@@ -144,8 +144,8 @@ public class ProductTable {
             Statement prstm = conn.createStatement();
             ResultSet rs = prstm.executeQuery(FIND_PRODUCTS_ORDERS);
             while (rs.next()) {
-                if (rs.getDate("checkIn") == null) {
-                    setTakenOrFree(rs.getInt("roomNo"), 0);
+                if (rs.getDate(Fields.CHECK_IN) == null) {
+                    setTakenOrFree(rs.getInt(Fields.ROOM_NO), 0);
                 }
             }
             conn.commit();
@@ -173,7 +173,6 @@ public class ProductTable {
             prstm.setInt(k, roomNo);
             prstm.executeUpdate();
             conn.commit();
-            System.out.println("commited");
             return true;
         } catch (SQLException e) {
             ConnectionUtils.rollback(conn);

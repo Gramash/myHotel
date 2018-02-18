@@ -2,7 +2,6 @@ package ua.nure.garmash.summaryTask4.UnitTests;
 
 import Utils.DateUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -53,17 +52,17 @@ public class TestDateUtils {
     @Before
     public void prepareDate()  {
         date = new java.sql.Date(2008, 1, 1);
-        expectedDate = DateUtils.add2Days(date);
+        expectedDate = DateUtils.addDays(date,2);
     }
 
 
     @Test
     public void addDaysTest() {
-        assertEquals(expectedDate, DateUtils.add2Days(date));
-        assertNotEquals(date,DateUtils.add2Days(date));
+        assertEquals(expectedDate, DateUtils.addDays(date,2));
+        assertNotEquals(date,DateUtils.addDays(date,2));
     }
     @Test(expected = NullPointerException.class)
     public void addDaysTestException() {
-        DateUtils.add2Days(null);
+        DateUtils.addDays(null,0);
     }
 }

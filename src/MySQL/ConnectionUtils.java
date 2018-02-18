@@ -6,7 +6,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionUtils {
@@ -15,7 +14,7 @@ public class ConnectionUtils {
     private static final String URL = "jdbc:mysql://localhost:3306/myhotel" +
             "?user=root&password=gibsonlp";
 
-//    public static Connection getConnection() throws SQLException {
+//    public static Connection getConnection2() throws SQLException {
 //        DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 //        return DriverManager.getConnection(URL);
 //    }
@@ -72,8 +71,11 @@ public class ConnectionUtils {
             //throw new DBException(Messages.ERR_CANNOT_OBTAIN_DATA_SOURCE, ex);
             ex.printStackTrace();
         }
-        System.out.println("DSConnection established");
         return conn;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getConnection());
     }
 
 

@@ -48,7 +48,7 @@
     <tag-class>org.apache.taglibs.standard.tag.el.sql.TransactionTag</tag-class>
     <body-content>JSP</body-content>
     <description>
-        Provides nested database action elements with a shared Connection,
+        Provides nested MySQL action elements with a shared Connection,
         set up to execute all statements as one transaction.
     </description>
     <attribute>

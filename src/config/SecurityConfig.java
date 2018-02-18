@@ -19,10 +19,6 @@ public class SecurityConfig {
         init();
     }
 
-    public static String getRoleManager() {
-        return ROLE_MANAGER;
-    }
-
     private static void init() {
 
         // Congig for CUSTOMER role

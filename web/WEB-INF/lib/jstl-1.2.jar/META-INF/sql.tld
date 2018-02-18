@@ -22,7 +22,7 @@
 
   <tag>
     <description>
-        Provides nested database action elements with a shared Connection,
+        Provides nested MySQL action elements with a shared Connection,
         set up to execute all statements as one transaction.
     </description>
     <name>transaction</name>
@@ -30,7 +30,7 @@
     <body-content>JSP</body-content>
     <attribute>
         <description>
-DataSource associated with the database to access. A
+DataSource associated with the MySQL to access. A
 String value represents a relative path to a JNDI
 resource or the parameters for the JDBC
 DriverManager facility.
@@ -88,7 +88,7 @@ SQL query statement.
     </attribute>
     <attribute>
         <description>
-Data source associated with the database to
+Data source associated with the MySQL to
 query. A String value represents a relative path
 to a JNDI resource or the parameters for the
 DriverManager class.
@@ -133,7 +133,7 @@ enforced.
     <attribute>
         <description>
 Name of the exported scoped variable for the result
-of the database update. The type of the scoped
+of the MySQL update. The type of the scoped
 variable is java.lang.Integer.
         </description>
         <name>var</name>
@@ -158,7 +158,7 @@ SQL update statement.
     </attribute>
     <attribute>
         <description>
-Data source associated with the database to update.
+Data source associated with the MySQL to update.
 A String value represents a relative path to a JNDI
 resource or the parameters for the JDBC
 DriverManager class.
@@ -196,7 +196,7 @@ Parameter value.
     <attribute>
         <description>
 Parameter value for DATE, TIME, or
-TIMESTAMP column in a database table.
+TIMESTAMP column in a MySQL table.
         </description>
         <name>value</name>
         <required>true</required>
@@ -260,8 +260,8 @@ JDBC parameter: driver class name.
     </attribute>
     <attribute>
         <description>
-JDBC parameter: URL associated with
-the database.
+            JDBC parameter: URL associated with
+            the MySQL.
         </description>
         <name>url</name>
         <required>false</required>
@@ -269,9 +269,9 @@ the database.
     </attribute>
     <attribute>
         <description>
-JDBC parameter: database user on
+JDBC parameter: MySQL user on
 whose behalf the connection to the
-database is being made.
+MySQL is being made.
         </description>
         <name>user</name>
         <required>false</required>

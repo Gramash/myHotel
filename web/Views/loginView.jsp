@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: reygo
@@ -42,10 +43,9 @@
 <jsp:include page="../_menu.jsp"></jsp:include>
 
 
-<p style="color: red;">${errorMessage}</p>
-<p style="color: blue;">${welcomeMessage}</p>
+<p style="color: mintcream;">${welcomeMessage}</p>
 <div class="container">
-    <form method="POST" action="/controller">
+    <form method="POST" action="/controller" accept-charset="UTF-8">
         <input type="hidden" name="command" value="login"/>
         <table border="0" align="center">
             <tr>
@@ -68,6 +68,11 @@
                 </td>
             </tr>
         </table>
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger" align="center">
+                <strong> Failed!</strong> ${errorMessage}
+            </div>
+        </c:if>
 
         <script>
             $(document).ready(function () {

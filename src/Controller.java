@@ -1,3 +1,4 @@
+import Commands.Attributes;
 import Commands.Command;
 import Commands.CommandContainer;
 
@@ -7,40 +8,53 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-@WebServlet ({"/controller", "/"})
+
+
+@WebServlet({"/controller", "/"})
 public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         process(req, resp);
+        req.getSession().removeAttribute(Attributes.MESSAGE);
+        req.getSession().removeAttribute(Attributes.ERROR_MESSAGE);
+        req.getSession().removeAttribute(Attributes.WELCOME_MESSAGE);
+        req.getSession().removeAttribute(Attributes.ERROR_REGISTER_MESSAGE);
+        req.getSession().removeAttribute(Attributes.HOME_VIEW_MESSAGE);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         process(req, resp);
+
     }
 
     private void process(HttpServletRequest req,
                          HttpServletResponse resp) throws IOException, ServletException {
 
-        System.out.println("controller started working");
-        // extract command name from the request
-        String commandName = req.getParameter("command");
-        System.out.println(commandName);
-        // obtain command object by its name
+        String commandName = req.getParameter(Attributes.COMMAND);
+
         Command command = CommandContainer.get(commandName);
-        // execute command and get forward address
+
         String forward = "Views/accessDeniedView.jsp";
         try {
             forward = command.execute(req, resp);
         } catch (Exception ex) {
-            System.out.println("you are in catch ex");
-            req.setAttribute("errorMessage", ex.getMessage());
+            req.setAttribute(Attributes.ERROR_MESSAGE, ex.getMessage());
             ex.printStackTrace();
 
         }
-        // go to forward
-        req.getRequestDispatcher(forward).forward(req, resp);
+
+//        String method = req.getMethod();
+//        if (method.equalsIgnoreCase("get")) {
+            req.getRequestDispatcher(forward).forward(req, resp);
+//        } else {
+//            resp.sendRedirect(forward);
+//        }
+
+
     }
+
+
 
 }

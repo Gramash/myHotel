@@ -49,10 +49,10 @@ public class DateUtils {
         return diff / (1000 * 60 * 60 * 24);
     }
 
-    public static java.sql.Date add2Days(Date date) {
+    public static java.sql.Date addDays(Date date, int days) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.DATE, 2);
+        calendar.add(Calendar.DATE, days);
         date = calendar.getTime();
         return new java.sql.Date(date.getTime());
     }
@@ -61,7 +61,6 @@ public class DateUtils {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         date = df.parse(dateStr);
-
         Calendar c = Calendar.getInstance();
 
 // set the calendar to start of today
@@ -80,6 +79,27 @@ public class DateUtils {
             return true;
         }
         return false;
+    }
+
+    public static Date stringToDate(String dateStr){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = df.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static String dateToString (Date date) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(date);
+    }
+
+    public static void main(String[] args) {
+        Date date = stringToDate("2008-01-01");
+        System.out.println(dateToString(date));
     }
 
 

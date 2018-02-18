@@ -1,9 +1,6 @@
 package Utils;
 
-import JavaBeans.UserAccount;
-
-import java.util.HashMap;
-import java.util.Map;
+import MySQL.JavaBeans.UserAccount;
 
 import javax.servlet.http.HttpSession;
 

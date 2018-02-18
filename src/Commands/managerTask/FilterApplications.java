@@ -1,8 +1,11 @@
 package Commands.managerTask;
 
+import Commands.Attributes;
 import Commands.Command;
-import JavaBeans.Product;
-import MySQL.ProductTable;
+import Commands.Paths;
+import MySQL.Fields;
+import MySQL.JavaBeans.Product;
+import MySQL.tables.ProductTable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +17,11 @@ import java.util.List;
 public class FilterApplications extends Command {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String sleeps = req.getParameter("sleeps");
-        String checkIn = req.getParameter("checkIn");
-        String checkOut = req.getParameter("checkOut");
-        String clazz = req.getParameter("class");
-        String forward = "/Views/accessDenied";
+        String sleeps = req.getParameter(Fields.SLEEPS);
+        String checkIn = req.getParameter(Fields.CHECK_IN);
+        String checkOut = req.getParameter(Fields.CHECK_OUT);
+        String clazz = req.getParameter(Fields.CLASS);
+        String forward = Paths.JSP_ACCESS_DENIED;
         List<Product> listSuggestions;
         try {
             listSuggestions = ProductTable.selectSuitable(Integer.parseInt(sleeps), checkIn, checkOut, clazz);
@@ -26,10 +29,11 @@ public class FilterApplications extends Command {
             e.printStackTrace();
             return forward;
         }
-        req.setAttribute("appId", req.getParameter("appId"));
-        req.setAttribute("userId", req.getParameter("userId"));
-        req.setAttribute("suggestionsList", listSuggestions);
-        forward = "/controller?command=managerTask";
+        System.out.println(listSuggestions.size());
+        req.setAttribute(Attributes.APP_ID, req.getParameter(Attributes.APP_ID));
+        req.setAttribute(Attributes.USER_ID, req.getParameter(Attributes.USER_ID));
+        req.setAttribute(Attributes.SUGGESTION_LIST, listSuggestions);
+        forward = Paths.COMMAND_MANAGER;
         return forward;
     }
 }

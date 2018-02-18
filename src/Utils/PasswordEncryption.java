@@ -24,17 +24,13 @@ public class PasswordEncryption {
     public static boolean check(String password, String stored)  {
         String[] saltAndPass = stored.split("\\$");
         if (saltAndPass.length != 2) {
-            throw new IllegalStateException(
-                    "The stored password have the form 'salt$hash'");
+            return false;
         }
         String hashOfInput = hash(password, Base64.getDecoder().decode(saltAndPass[0]));
         return hashOfInput.equals(saltAndPass[1]);
     }
 
     public static String hash(String password, byte[] salt) {
-        if (password == null || password.length() == 0)
-            throw new IllegalArgumentException("Empty passwords are not supported.");
-
         try {
             SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             SecretKey key = null;

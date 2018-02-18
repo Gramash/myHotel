@@ -1,6 +1,8 @@
-package MySQL;
+package MySQL.tables;
 
-import JavaBeans.Application;
+import MySQL.ConnectionUtils;
+import MySQL.Fields;
+import MySQL.JavaBeans.Application;
 import Utils.DateUtils;
 
 import java.sql.*;
@@ -8,7 +10,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 public class ApplicationsTable {
 
@@ -32,7 +33,10 @@ public class ApplicationsTable {
     }
 
     public static boolean insertApplication(int userId, int sleeps, String clazz, String checkIn, String checkOut) throws ParseException {
-        if (DateUtils.isBeforeToday(checkIn)) {
+        if ( DateUtils.isBeforeToday(
+                DateUtils.dateToString(
+                        DateUtils.addDays(
+                                DateUtils.stringToDate(checkIn), -3)))) {
             return false;
         }
         Connection conn = null;
@@ -68,10 +72,10 @@ public class ApplicationsTable {
             rs = prstm.executeQuery();
             list = new ArrayList<>();
             while (rs.next()) {
-                Application app = new Application(rs.getString("application_id"),
-                        rs.getInt("sleeps"), rs.getString("class"),
-                        rs.getString("checkIn"), rs.getString("checkOut"),
-                        rs.getString("email"), rs.getString("name"), rs.getInt("user_id"));
+                Application app = new Application(rs.getString(Fields.STRING),
+                        rs.getInt(Fields.SLEEPS), rs.getString(Fields.CLASS),
+                        rs.getString(Fields.CHECK_IN), rs.getString(Fields.CHECK_OUT),
+                        rs.getString(Fields.EMAIL), rs.getString(Fields.NAME), rs.getInt(Fields.USER_ID));
                 list.add(app);
             }
         } catch (SQLException e) {
@@ -90,9 +94,10 @@ public class ApplicationsTable {
             rs = prstm.executeQuery();
             list = new ArrayList<>();
             while (rs.next()) {
-                Application app = new Application(rs.getString("application_id"),
-                        rs.getInt("sleeps"), rs.getString("class"), rs.getString("checkIn"), rs.getString("checkOut"),
-                        rs.getString("email"), rs.getString("name"), userId);
+                Application app = new Application(rs.getString(Fields.STRING),
+                        rs.getInt(Fields.SLEEPS), rs.getString(Fields.CLASS), rs.getString(Fields.CHECK_IN),
+                        rs.getString(Fields.CHECK_OUT),
+                        rs.getString(Fields.EMAIL), rs.getString(Fields.NAME), userId);
                 list.add(app);
             }
         } catch (SQLException e) {

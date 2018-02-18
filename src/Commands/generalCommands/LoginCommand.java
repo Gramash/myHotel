@@ -1,10 +1,14 @@
 package Commands.generalCommands;
 
+import Commands.Attributes;
 import Commands.Command;
-import JavaBeans.UserAccount;
-import MySQL.UserTable;
+import Commands.Messages;
+import Commands.Paths;
+import MySQL.JavaBeans.UserAccount;
+import MySQL.tables.UserTable;
 import Utils.AppUtils;
 import config.SecurityConfig;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,25 +17,26 @@ import java.io.IOException;
 public class LoginCommand extends Command {
 
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String userLogin = request.getParameter("userLogin");
-        String password = request.getParameter("password");
+        String userLogin = request.getParameter(Attributes.USER_LOGIN);
+        String password = request.getParameter(Attributes.USER_PASSWORD);
 
         UserAccount userAccount = UserTable.findByLogin(userLogin, password);
-        String forward = "/Views/loginView.jsp";
+        String forward = Paths.JSP_LOGIN;
 
         if (userAccount == null) {
-            String errorMessage = "Invalid Login or Password";
+            String errorMessage = Messages.INVALID_LOGIN_PASSWORD;
 
-            request.setAttribute("errorMessage", errorMessage);
+            request.getSession().setAttribute(Attributes.ERROR_MESSAGE, errorMessage);
             return forward;
         }
-        forward= "/homeView.jsp";
+
+        forward = Paths.JSP_HOME;
         String message = "Welcome, " + userAccount.getUserName() + "!";
-        request.setAttribute("message", message);
+        request.getSession().setAttribute(Attributes.HOME_VIEW_MESSAGE, message);
 
 
         AppUtils.storeLoginedUser(request.getSession(), userAccount);
-        request.getSession().setAttribute("role", SecurityConfig.ROLE_MANAGER);
+        request.getSession().setAttribute(Attributes.ROLE, SecurityConfig.ROLE_MANAGER);
 
 
         return forward;

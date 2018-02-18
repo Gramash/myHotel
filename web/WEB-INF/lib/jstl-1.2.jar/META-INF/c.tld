@@ -480,7 +480,7 @@ Expression to be evaluated.
     <attribute>
         <description>
 Target object whose property will be set. Must evaluate to
-a JavaBeans object with setter property property, or to a
+a MySQL.JavaBeans object with setter property property, or to a
 java.util.Map object.
         </description>
         <name>target</name>

@@ -13,8 +13,6 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-
 </head>
 
 <body>
@@ -23,7 +21,7 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/homeView.jsp">iHotel</a>
+            <a class="navbar-brand" href="/controller?command=home">iHotel</a>
         </div>
         <ul class="nav navbar-nav">
             <li><a href="/controller?command=dashboard">Dashboard</a></li>
@@ -31,10 +29,9 @@
                 <a href="/controller?command=managerTask">Manager Task</a>
             </c:if></li>
             <li><a href="/controller?command=productView">Offers</a></li>
-            <li><a href="${pageContext.request.contextPath}/userInfo">My Account</a></li>
             <li>
                 <c:if test="${loginedUser==null}">
-                    <a href="/Views/RegisterView.jsp">Join</a>
+                    <a href="/controller?command=registerView">Join</a>
                 </c:if>
             </li>
         </ul>
@@ -42,7 +39,7 @@
             <li><a>[ ${loginedUser.userLogin} ]</a>
             <li>
                 <c:if test="${loginedUser==null}">
-                    <a href="/Views/loginView.jsp"> <span
+                    <a href="/controller?command=loginView"> <span
                             class="glyphicon glyphicon-log-in"></span> Sign In</a>
                 </c:if>
             </li>

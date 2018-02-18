@@ -7,6 +7,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class EmailUtils {
+
     public void sendPlainTextEmail(String host, String port,
                                    final String userName, final String password, String toAddress,
                                    String subject, String message) throws MessagingException {
@@ -38,11 +39,10 @@ public class EmailUtils {
     }
 
     public static boolean send(String mailTo, String subject, String message) {
-        // SMTP server information
         String host = "smtp.gmail.com";
         String port = "587";
         String mailFrom = "garmash.g.k@gmail.com";
-        String password = "|_|_|JL|-0}{@";
+        String password = "pass";
         EmailUtils mailer = new EmailUtils();
         try {
             mailer.sendPlainTextEmail(host, port, mailFrom, password, mailTo,

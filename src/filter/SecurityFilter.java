@@ -1,4 +1,4 @@
-package LoginFilter;
+package filter;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import JavaBeans.UserAccount;
+import MySQL.JavaBeans.UserAccount;
 import Utils.AppUtils;
 import Utils.SecurityUtils;
 import Wrappers.UserRoleRequestWrapper;
@@ -15,25 +15,27 @@ import Wrappers.UserRoleRequestWrapper;
 @WebFilter("/*")
 public class SecurityFilter implements Filter {
 
+    private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(SecurityFilter.class);
+
     @Override
     public void destroy() {
+        LOG.debug("Filter destruction starts");
+        LOG.debug("Filter destruction finished");
+
     }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws IOException, ServletException {
+        LOG.debug("Filter starts");
+
         HttpServletRequest request = (HttpServletRequest) req;
+        LOG.debug("Request URI ===> " + request.getRequestURI());
         HttpServletResponse response = (HttpServletResponse) resp;
 
-        String servletPath = request.getServletPath();
-        System.out.println("servletPath = " + servletPath);
-        // User info is saved to session (after he successfully logged in)
         UserAccount loginedUser = AppUtils.getLoginedUser(request.getSession());
 
-        if (servletPath.equals("/Views/loginView.jsp")) {
-            chain.doFilter(request, response);
-            return;
-        }
+
         HttpServletRequest wrapRequest = request;
 
         if (loginedUser != null) {
@@ -60,7 +62,7 @@ public class SecurityFilter implements Filter {
             if (!hasPermission) {
 
                 RequestDispatcher dispatcher //
-                        = request.getRequestDispatcher("/Views/accessDeniedView.jsp");
+                        = request.getRequestDispatcher("/Views/accessDeniedForSure.jsp");
 
                 dispatcher.forward(request, response);
                 return;

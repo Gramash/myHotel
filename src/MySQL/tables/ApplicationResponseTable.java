@@ -1,8 +1,8 @@
-package MySQL;
+package MySQL.tables;
 
-import JavaBeans.Application;
-import JavaBeans.ApplicationResponse;
-import JavaBeans.UserAccount;
+import MySQL.ConnectionUtils;
+import MySQL.Fields;
+import MySQL.JavaBeans.Application;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -28,9 +28,10 @@ public class ApplicationResponseTable {
             rs = prstm.executeQuery();
             ar = new ArrayList<>();
             while (rs.next()) {
-                ar.add(new Application(rs.getString("application_id"), rs.getInt("sleeps"), rs.getString("class"),
-                        rs.getString("checkIn"),rs.getString("checkOut"),
-                        rs.getInt("roomNo"),rs.getDouble("price"), rs.getString("image")));
+                ar.add(new Application(rs.getString(Fields.STRING), rs.getInt(Fields.SLEEPS),
+                        rs.getString(Fields.CLASS),
+                        rs.getString(Fields.CHECK_IN),rs.getString(Fields.CHECK_OUT),
+                        rs.getInt(Fields.ROOM_NO),rs.getDouble(Fields.PRICE), rs.getString(Fields.IMAGE)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,6 +43,7 @@ public class ApplicationResponseTable {
         Connection conn = null;
         try {
             conn = ConnectionUtils.getConnection();
+            conn.setAutoCommit(false);
             PreparedStatement prstm = conn.prepareStatement(INSERT_RESPONSE);
             int k = 1;
             prstm.setString(k++, applicId);

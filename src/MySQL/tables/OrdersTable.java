@@ -1,22 +1,20 @@
-package MySQL;
+package MySQL.tables;
 
 
-import JavaBeans.Order;
-import JavaBeans.UserAccount;
+import MySQL.ConnectionUtils;
+import MySQL.Fields;
+import MySQL.JavaBeans.Order;
+import MySQL.JavaBeans.UserAccount;
 import Utils.DateUtils;
-import com.mysql.jdbc.MysqlDataTruncation;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrdersTable {
 
-    private static final String INSERT_ORDER = "INSERT INTO orders VALUES (?,?, ?, ?, DEFAULT, DEFAULT )";
+    private static final String INSERT_ORDER = "INSERT INTO orders VALUES (?,?, ?, ?, ?, DEFAULT )";
     private static final String GET_ORDER_BY_USERID =
             "SELECT products.roomNo, products.sleeps, orders.checkIn, orders.checkOut, products.price, paid, ts, products.class " +
                     "FROM orders " +
@@ -27,10 +25,42 @@ public class OrdersTable {
                     "FROM orders " +
                     "INNER JOIN products ON products.roomNo = orders.product_id " +
                     "INNER JOIN users ON users.user_id = orders.user_id";
-    private static final String UPDATE_BEFORE_QUERY = "DELETE FROM orders WHERE ts < (NOW() - INTERVAL 1 MINUTE ) " +
+    private static final String UPDATE_BEFORE_QUERY = "DELETE FROM orders WHERE ts < (NOW() - INTERVAL 3 MINUTE ) " +
             "AND paid='0' " +
             "OR checkOut <= curdate()";
     private static final String CONFIRM_ORDER = "UPDATE ORDERS SET paid = 1 WHERE product_id =? AND checkIn=? AND checkOut=?";
+    private static final String GET_ORDERS_PRICE_BY_USER_ID = "SELECT sum(products.price) as aTotal , users.name, users.user_id " +
+            "                    FROM orders \n" +
+            "                    INNER JOIN users ON users.user_id = orders.user_id  " +
+            "                    INNER JOIN products ON products.roomNo = orders.product_id " +
+            "                    GROUP BY users.user_id";
+
+    public static List<Order> getOrdersPrice() {
+        Connection conn = null;
+        List<Order> orderList = null;
+        try {
+            conn = ConnectionUtils.getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(GET_ORDERS_PRICE_BY_USER_ID);
+            ResultSet rs = preparedStatement.executeQuery();
+            orderList = new ArrayList<>();
+            while (rs.next()){
+                Order order = new Order();
+                UserAccount user = UserTable.findById(rs.getInt("user_id"));
+                order.setUser(user);
+                order.setUserId(user.getUserID());
+                order.setPrice(Double.parseDouble(rs.getString("aTotal")));
+                orderList.add(order);
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            ConnectionUtils.rollback(conn);
+            e.printStackTrace();
+        } finally {
+            ConnectionUtils.closeCon(conn);
+
+        }
+        return orderList;
+    }
 
 
     private static void updateBeforeQuery() {
@@ -42,7 +72,7 @@ public class OrdersTable {
             prstm.execute();
             ProductTable.setFree();
             conn.commit();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ConnectionUtils.rollback(conn);
             e.printStackTrace();
         } finally {
@@ -50,8 +80,9 @@ public class OrdersTable {
         }
     }
 
-    public static boolean insertOrder(int userId, int productId, String checkIn, String checkOut, String appId) throws ParseException {
-        if (DateUtils.isBeforeToday(checkIn)) {
+    public static boolean insertOrder(int userId, int productId, String checkIn, String checkOut, String appId, boolean paidUp) throws ParseException {
+        if (DateUtils.isBeforeToday(DateUtils.dateToString(
+                DateUtils.addDays(DateUtils.stringToDate(checkIn), paidUp ? 0 : -2)))) {
             return false;
         }
         Connection conn = null;
@@ -63,7 +94,8 @@ public class OrdersTable {
             prstm.setInt(k++, userId);
             prstm.setInt(k++, productId);
             prstm.setString(k++, checkIn);
-            prstm.setString(k, checkOut);
+            prstm.setString(k++, checkOut);
+            prstm.setInt(k, paidUp ? 1 : 0);
             prstm.execute();
             if (appId != null) {
                 ApplicationsTable.closeApplication(appId);
@@ -77,7 +109,6 @@ public class OrdersTable {
         } finally {
             ConnectionUtils.closeCon(conn);
         }
-
     }
 
     public static List<Order> getOrderByUserId(int userId) {
@@ -85,26 +116,26 @@ public class OrdersTable {
         Order order;
         PreparedStatement getOrdersByUserId;
         ResultSet rs;
-        java.sql.Date date = null;
         try (Connection conn = ConnectionUtils.getConnection()) {
             orderList = new ArrayList<>();
-            updateBeforeQuery();
             getOrdersByUserId = conn.prepareStatement(GET_ORDER_BY_USERID);
             int k = 1;
             getOrdersByUserId.setInt(k, userId);
             rs = getOrdersByUserId.executeQuery();
             while (rs.next()) {
-                String checkIn = rs.getString("checkIn");
-                String checkOut = rs.getString("checkOut");
+                Date date = null;
+                String checkIn = rs.getString(Fields.CHECK_IN);
+                String checkOut = rs.getString(Fields.CHECK_OUT);
                 float daysCount = DateUtils.countDays(checkIn, checkOut);
-                if (!rs.getBoolean("paid")) {
-                    date = DateUtils.add2Days(rs.getDate("ts"));
+                if (!rs.getBoolean(Fields.PAID)) {
+                    date = DateUtils.addDays(rs.getDate(Fields.TS), 2);
                 }
-                order = new Order(rs.getInt("roomNo"), rs.getInt("sleeps"),
-                        rs.getDate("checkIn"), rs.getDate("checkOut"),
-                        (rs.getDouble("price") * daysCount), date, rs.getString("class"));
+                order = new Order(rs.getInt(Fields.ROOM_NO), rs.getInt(Fields.SLEEPS),
+                        rs.getDate(Fields.CHECK_IN), rs.getDate(Fields.CHECK_OUT),
+                        (rs.getDouble(Fields.PRICE) * daysCount), date, rs.getString(Fields.CLASS));
                 orderList.add(order);
             }
+            updateBeforeQuery();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -116,22 +147,22 @@ public class OrdersTable {
         Order order;
         PreparedStatement getOrdersByUserId;
         ResultSet rs;
-        java.sql.Date date = null;
+        Date date = null;
         Connection conn = null;
-        try  {
+        try {
             conn = ConnectionUtils.getConnection();
             orderList = new ArrayList<>();
             updateBeforeQuery();
             getOrdersByUserId = conn.prepareStatement(GET_ALL_ORDERS);
             rs = getOrdersByUserId.executeQuery();
             while (rs.next()) {
-                if (!rs.getBoolean("paid")) {
-                    date = DateUtils.add2Days(rs.getDate("ts"));
+                if (!rs.getBoolean(Fields.PAID)) {
+                    date = DateUtils.addDays(rs.getDate(Fields.TS), 2);
                 }
-                UserAccount user = UserTable.findByEmail(rs.getString("email"));
-                order = new Order(rs.getInt("roomNo"), rs.getInt("sleeps"),
-                        rs.getDate("checkIn"), rs.getDate("checkOut"),
-                        Double.parseDouble(rs.getString("price")), date, rs.getString("class"), user);
+                UserAccount user = UserTable.findByEmail(rs.getString(Fields.EMAIL));
+                order = new Order(rs.getInt(Fields.ROOM_NO), rs.getInt(Fields.SLEEPS),
+                        rs.getDate(Fields.CHECK_IN), rs.getDate(Fields.CHECK_OUT),
+                        Double.parseDouble(rs.getString(Fields.PRICE)), date, rs.getString(Fields.CLASS), user);
                 orderList.add(order);
             }
             conn.commit();
@@ -164,6 +195,4 @@ public class OrdersTable {
         }
         return false;
     }
-
-
 }

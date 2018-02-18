@@ -1,8 +1,13 @@
 package Commands.generalCommands;
 
+import Commands.Attributes;
 import Commands.Command;
-import JavaBeans.Product;
-import MySQL.ProductTable;
+import Commands.Messages;
+import Commands.Paths;
+import MySQL.Fields;
+import MySQL.JavaBeans.Product;
+import MySQL.tables.ProductTable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
@@ -13,20 +18,20 @@ public class ProductViewCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         List<Product> productList;
-        String orderBy = request.getParameter("orderBy");
-        String order = request.getParameter("order");
+        String orderBy = request.getParameter(Attributes.ORDER_BY);
+        String order = request.getParameter(Attributes.ORDER);
         if (orderBy == null) {
-            orderBy = "roomNo";
+            orderBy = Fields.ROOM_NO;
         }
         if (order == null) {
-            order = "asc";
+            order = Attributes.ASCENDING;
         }
         productList = ProductTable.extractAll(false, orderBy, order);
 
-        String sleeps = request.getParameter("sleeps");
-        String clazz = request.getParameter("class");
-        String checkIn = request.getParameter("checkIn");
-        String checkOut = request.getParameter("checkOut");
+        String sleeps = request.getParameter(Fields.SLEEPS);
+        String clazz = request.getParameter(Fields.CLASS);
+        String checkIn = request.getParameter(Fields.CHECK_IN);
+        String checkOut = request.getParameter(Fields.CHECK_OUT);
 
         if(sleeps!=null && clazz!=null &&
                 checkIn!=null && checkOut!=null){
@@ -34,13 +39,13 @@ public class ProductViewCommand extends Command {
                 productList = ProductTable.selectSuitable(Integer.parseInt(sleeps), checkIn, checkOut, clazz);
             } catch (ParseException e) {
                 e.printStackTrace();
-                request.setAttribute("message", "Please fill in dates");
+                request.getSession().setAttribute(Attributes.MESSAGE, Messages.DATE_FIELDS_ERROR);
             }
 
         }
-        request.setAttribute("reqFrom", request.getParameter("command"));
-        request.setAttribute("productList", productList);
-        return "Views/ProductView.jsp";
+        request.setAttribute(Attributes.REQUEST_FROM, request.getParameter(Attributes.COMMAND));
+        request.setAttribute(Attributes.PRODUCT_LIST, productList);
+        return Paths.JSP_PRODUCT_VIEW;
 
     }
 }

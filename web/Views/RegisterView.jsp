@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: reygo
@@ -5,7 +6,7 @@
   Time: 14:09
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +35,7 @@
             color: white;
         }
 
-        #message, #loginMessage{
+        #message, #loginMessage, #nameMessage{
             display: none;
             background: #f1f1f1;
             color: #000;
@@ -43,7 +44,15 @@
 
         }
 
-        #message p, #loginMessage p {
+        #message p  {
+            padding: 7px 20px;
+            font-size: 90%
+        }
+        #loginMessage p {
+            padding: 10px 20px;
+            font-size: 90%
+        }
+        #nameMessage p {
             padding: 10px 20px;
             font-size: 90%
         }
@@ -77,7 +86,7 @@
 
 <jsp:include page="/_menu.jsp"/>
 
-<p align="center" style="color: red;">${errorMessage}</p>
+
 <div class="container">
     <form method="POST" action="/controller">
         <input type="hidden" name="command" value="register">
@@ -86,7 +95,7 @@
                 <td>
                     <label for="id"></label>
                     <input type="text" id="id" placeholder="Login" name="userLogin"
-                           pattern="^(?=.*[A-Za-z0-9]$)[A-Za-z][A-Za-z\d._]{7,19}$" required/>
+                           pattern="^(?=.*[A-Za-z0-9а-яА-я]$)[A-Za-zа-яА-я][A-Za-zа-яА-я\d._]{7,19}$" required/>
                 </td>
             </tr>
             <tr>
@@ -99,7 +108,8 @@
             <tr>
                 <td>
                     <label for="name"></label>
-                    <input type="text" id="name" placeholder="First Name" name="userName" required/>
+                    <input type="text" id="name" placeholder="First Name" name="userName"
+                           pattern="^(?=.*[A-Za-z0-9а-яА-я]$)[A-Za-zа-яА-я][A-Za-zа-яА-я]{2,19}$" required/>
                 </td>
             </tr>
             <tr>
@@ -117,10 +127,15 @@
         </table>
     </form>
 </div>
+<c:if test="${not empty errorRegisterMessage}">
+    <div class="alert alert-danger" align="center">
+        <strong> Failed!</strong> ${errorRegisterMessage}
+    </div>
+</c:if>
 
 <div id="message" align="center">
-    <h4>Password must contain the following:</h4>
-    <p  id="letter" class="invalid">A <b>lowercase</b> letter</p>
+    <h5>Password must contain the following:</h5>
+    <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
     <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
     <p id="number" class="invalid">A <b>number</b></p>
     <p id="length" class="invalid">Minimum <b>8 characters</b></p>
@@ -130,13 +145,23 @@
     <h4>Login must consist of the following:</h4>
     <p  id="letter2" class="neutral">Start and end with a letter or a number</p>
     <p id="capital2" class="neutral">Can have "_" or "."</p>
-    <p id="number2" class="neutral">Must be 8 to 20 symbols long</p>
+    <p id="number2" class="neutral">Must be 2 to 20 symbols long</p>
+    <p></p>
+    <p></p>
+</div>
+<div id="nameMessage" align="center">
+    <h4>Name must consist of the following:</h4>
+    <p >Start and end with a letter </p>
+    <p >Can not contain special symbols "!@#$%^&*()_.</p>
+    <p >Must be 8 to 20 symbols long</p>
+    <p></p>
     <p></p>
 </div>
 
 <script>
     var myInput = document.getElementById("psw");
-    var myInput2 = document.getElementById("id")
+    var myInput2 = document.getElementById("id");
+    var myInput3 = document.getElementById("name");
     var letter = document.getElementById("letter");
     var capital = document.getElementById("capital");
     var number = document.getElementById("number");
@@ -159,6 +184,12 @@
     //close login field when login intup is not active
     myInput2.onblur = function () {
         document.getElementById("loginMessage").style.display = "none";
+    }
+    myInput3.onfocus = function () {
+        document.getElementById("nameMessage").style.display = "block";
+    }
+    myInput3.onblur = function () {
+        document.getElementById("nameMessage").style.display = "none";
     }
 
     // When the user starts to type something inside the password field
@@ -202,7 +233,7 @@
             length.classList.add("invalid");
         }
 
-        if (myInput.value.length !=16) {
+        if (myInput.value.length >16) {
             length2.classList.remove("valid");
             length2.classList.add("invalid");
         } else {

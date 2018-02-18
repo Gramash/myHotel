@@ -1,4 +1,4 @@
-package JavaBeans;
+package MySQL.JavaBeans;
 
 public class ApplicationResponse {
     private String applicationId;

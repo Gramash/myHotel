@@ -251,7 +251,7 @@
 
 <h3 style="color: white">Available rooms</h3>
 
-<p style="color: blue;" align="center">${message}</p>
+<p style="color: mintcream;" align="center">${message}</p>
 
 <table align="center" style="background-color: mintcream">
     <tr>
@@ -279,12 +279,16 @@
                 <td>${product.clazz}</td>
                 <td>${product.price}</td>
                 <td align="center">
-                    <input type="date" name="checkIn">
+                    <input type="date" name="checkIn" required>
                 </td>
                 <td align="center">
-                    <input type="date" name="checkOut">
+                    <input type="date" name="checkOut" required>
                 </td>
-                <td><input type="submit" value="Submit"/></td>
+                <td>
+                    <input align="center" class="w3-check" type="checkbox" name="buy" value="Buy it now!">
+                    <label>Pay up</label>
+                    <input type="submit" value="Submit"/>
+                </td>
             </tr>
         </form>
         <!-- The Modal -->

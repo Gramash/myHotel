@@ -1,8 +1,12 @@
 package Commands.customerTask;
 
+import Commands.Attributes;
 import Commands.Command;
-import JavaBeans.UserAccount;
-import MySQL.ApplicationsTable;
+import Commands.Messages;
+import Commands.Paths;
+import MySQL.Fields;
+import MySQL.JavaBeans.UserAccount;
+import MySQL.tables.ApplicationsTable;
 import Utils.AppUtils;
 
 import javax.servlet.ServletException;
@@ -16,28 +20,27 @@ public class MakeApplicationCommand extends Command {
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         UserAccount user = AppUtils.getLoginedUser(req.getSession());
         String message;
-        String forward ="/homeView.jsp";
+        String forward = Paths.JSP_HOME;
+
         try {
-            try {
-                if (!ApplicationsTable.insertApplication(user.getUserID(), Integer.parseInt(req.getParameter("sleeps")),
-                        req.getParameter("class"), req.getParameter("checkIn"), req.getParameter("checkOut"))) {
-                    message = "Please specify correct date range";
-                    req.setAttribute("message", message);
-                } else {
-                    message = "You have successfully made an application. Please visit Your Dashboard to check for an offer";
-                }
-            } catch (ParseException e) {
-                message = "Please, fill in all required date fields";
-                req.setAttribute("message", message);
-                e.printStackTrace();
+            if (!ApplicationsTable.insertApplication(user.getUserID(), Integer.parseInt(req.getParameter(Fields.SLEEPS)),
+                    req.getParameter(Fields.CLASS), req.getParameter(Fields.CHECK_IN), req.getParameter(Fields.CHECK_OUT))) {
+                message = Messages.CANT_INSERT_APPLICATION;
+                req.getSession().setAttribute(Attributes.HOME_VIEW_MESSAGE, message);
+            } else {
+                message = Messages.INSERT_APPLICATION_SUCCESSES;
             }
+        } catch (ParseException e) {
+            message = Messages.DATE_FIELDS_ERROR;
+            req.getSession().setAttribute(Attributes.HOME_VIEW_MESSAGE, message);
+            e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
-            message = "Sorry, You have to login prior to making applications";
-            req.setAttribute("message", message);
+            message = Messages.NOT_LOGGED_IN;
+            req.getSession().setAttribute(Attributes.HOME_VIEW_MESSAGE, message);
         }
 
-        req.setAttribute("message", message);
+        req.getSession().setAttribute(Attributes.HOME_VIEW_MESSAGE, message);
         return forward;
     }
 

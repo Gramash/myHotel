@@ -1,6 +1,7 @@
 package Commands.generalCommands;
 
 import Commands.Command;
+import Commands.Paths;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ public class LogoutCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         request.getSession().invalidate();
 
-        // Redirect to Home Page.
-        return request.getContextPath() + "/homeView.jsp";
+        return request.getContextPath() + Paths.JSP_HOME;
     }
 }
