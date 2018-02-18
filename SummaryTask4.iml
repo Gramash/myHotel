@@ -11,19 +11,6 @@
         </sourceRoots>
       </configuration>
     </facet>
-    <facet type="web" name="Web2">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/web/web.xml" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/web" relative="/WEB-INF" />
-        </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src" />
-        </sourceRoots>
-      </configuration>
-    </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
@@ -91,6 +78,27 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/site/apidocs" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/contribs/CekiGulcu" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/contribs/Jamie Tsao" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/contribs/JimMoore" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/contribs/ThomasFenner" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/src/main/java" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/src/main/javadoc" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/src/performance/java" />
+          <root url="jar://$USER_HOME$/Downloads/log4j-1.2.17.zip!/apache-log4j-1.2.17/tests/src/java" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

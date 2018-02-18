@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context reloadable="true">
+
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+
+	<Resource name="mysql"
+  			auth="Container" 
+  			type="javax.sql.DataSource"
+			maxActive="100" maxIdle="30" maxWait="10000"
+			username="root" password="gibsonlp"
+			driverClassName="com.mysql.jdbc.Driver"
+			defaultAutoCommit="false"
+			defaultTransactionIsolation="READ_COMMITTED"
+			url="jdbc:mysql://localhost:3306/myhotel"/>
+</Context>
